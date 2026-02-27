@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand colors */
+    --color-brand-50: #EFF6FF;
+    --color-brand-100: #DBEAFE;
+    --color-brand-200: #BFDBFE;
+    --color-brand-300: #93C5FD;
+    --color-brand-400: #60A5FA;
+    --color-brand-500: #3B82F6;
+    --color-brand-600: #2563EB;
+    --color-brand-700: #1D4ED8;
+    --color-brand-800: #1E40AF;
+    --color-brand-900: #1E3A8A;
+    --color-brand-950: #172554;
+
+    /* Semantic colors - Light */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8fafc;
+    --color-bg-tertiary: #f1f5f9;
+    --color-bg-inverse: #0f172a;
+    --color-bg-brand: #3B82F6;
+    --color-bg-brand-hover: #2563EB;
+
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-tertiary: #94a3b8;
+    --color-text-inverse: #ffffff;
+    --color-text-brand: #3B82F6;
+
+    --color-border-primary: #e2e8f0;
+    --color-border-secondary: #cbd5e1;
+    --color-border-brand: #3B82F6;
+
+    /* Severity colors */
+    --color-severity-minor: #22c55e;
+    --color-severity-moderate: #f59e0b;
+    --color-severity-major: #f97316;
+    --color-severity-contraindicated: #ef4444;
+    --color-severity-life-threatening: #dc2626;
+
+    /* Status colors */
+    --color-status-active: #22c55e;
+    --color-status-pending: #f59e0b;
+    --color-status-suspended: #f97316;
+    --color-status-cancelled: #ef4444;
+    --color-status-completed: #6366f1;
+
+    --color-shadow: rgba(0, 0, 0, 0.1);
+  }
+
+  .dark {
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #1e293b;
+    --color-bg-tertiary: #334155;
+    --color-bg-inverse: #f8fafc;
+    --color-bg-brand: #2563EB;
+    --color-bg-brand-hover: #1D4ED8;
+
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #94a3b8;
+    --color-text-tertiary: #64748b;
+    --color-text-inverse: #0f172a;
+    --color-text-brand: #60A5FA;
+
+    --color-border-primary: #334155;
+    --color-border-secondary: #475569;
+    --color-border-brand: #60A5FA;
+
+    --color-shadow: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-6 shadow-sm;
+  }
+
+  .btn-primary {
+    @apply rounded-lg bg-[var(--color-bg-brand)] px-4 py-2 font-medium text-white transition-colors hover:bg-[var(--color-bg-brand-hover)] focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-4 py-2 font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-secondary)] focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3 py-2 text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] transition-colors focus:border-[var(--color-border-brand)] focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+  }
+
+  .severity-minor {
+    @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
+  }
+
+  .severity-moderate {
+    @apply bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+
+  .severity-major {
+    @apply bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400;
+  }
+
+  .severity-contraindicated {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
+  }
+}

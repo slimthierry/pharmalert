@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: pharmalert-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pharmalert
+      POSTGRES_PASSWORD: pharmalert_secret
+      POSTGRES_DB: pharmalert
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pharmalert"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: pharmalert-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pharmalert-backend
+    restart: unless-stopped
+    ports:
+      - "96000:96000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://pharmalert:pharmalert_secret@postgres:5432/pharmalert
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: pharmalert-secret-key-change-in-production
+      CORS_ORIGINS: '["http://localhost:3900"]'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: pharmalert-web
+    restart: unless-stopped
+    ports:
+      - "3900:3900"
+    environment:
+      VITE_API_URL: http://localhost:96000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
