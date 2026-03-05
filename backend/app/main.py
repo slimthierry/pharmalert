@@ -6,7 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import settings
 from app.config.database import engine
 from app.middleware.audit_middleware import AuditMiddleware
-from app.api.v1 import (
+from app.loggers import setup_logging
+from app.routes import app_router
     auth,
     medications,
     prescriptions,
@@ -17,20 +18,16 @@ from app.api.v1 import (
     dashboard,
     audit,
 )
-from app.api.fhir import (
+from app.libs.fhir import (
     medication_request,
     medication_administration,
     allergy_intolerance,
 )
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown."""
     yield
     await engine.dispose()
-
-
 app = FastAPI(
     title="PharmAlert API",
     description=(
@@ -90,8 +87,6 @@ app.include_router(
     prefix="/api/fhir/AllergyIntolerance",
     tags=["FHIR - AllergyIntolerance"],
 )
-
-
 @app.get("/health", tags=["Health"])
 async def health_check():
     """Health check endpoint."""

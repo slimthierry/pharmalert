@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.core.audit import log_audit
+from app.auth.audit import log_audit
 from app.models.adverse_event_models import (
     AdverseEvent,
     AdverseEventSeverity,

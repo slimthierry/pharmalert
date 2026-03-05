@@ -4,8 +4,8 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.core.audit import log_audit
-from app.core.exceptions import (
+from app.auth.audit import log_audit
+from app.auth.exceptions import (
     AllergyConflictException,
     InteractionContraindicatedException,
     NotFoundException,

@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.core.audit import log_audit
+from app.auth.audit import log_audit
 from app.models.administration_models import Administration, AdministrationStatus
 from app.models.prescription_models import Prescription
 from app.models.user_models import User

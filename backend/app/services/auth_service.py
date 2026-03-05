@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.security import create_access_token, get_password_hash, verify_password
+from app.auth.security import create_access_token, get_password_hash, verify_password
 from app.models.user_models import User, UserRole
 from app.schemas.auth_schemas import LoginRequest, TokenResponse
 from app.schemas.user_schemas import UserCreate
