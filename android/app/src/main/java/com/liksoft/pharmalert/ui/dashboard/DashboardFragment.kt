@@ -60,32 +60,28 @@ class DashboardFragment : Fragment() {
     }
 
     private fun displayDashboard(data: DashboardResponse) {
+        val stats = data.stats
+
         binding.tvWelcome.text = getString(R.string.dashboard_welcome, getUserName())
 
         // Stat cards
-        setStatCard(binding.cardPendingRx.root, data.pendingPrescriptions.toString(),
+        setStatCard(binding.cardPendingRx.root, stats.pendingValidations.toString(),
             getString(R.string.dashboard_pending_rx))
-        setStatCard(binding.cardPendingAdm.root, data.pendingAdministrations.toString(),
+        setStatCard(binding.cardPendingAdm.root, stats.missedDosesToday.toString(),
             getString(R.string.dashboard_pending_adm))
-        setStatCard(binding.cardInteractions.root, data.activeInteractions.toString(),
+        setStatCard(binding.cardInteractions.root, stats.criticalInteractions.toString(),
             getString(R.string.dashboard_active_inter))
-        setStatCard(binding.cardTodayAdm.root, data.todayAdministrations.toString(),
+        setStatCard(binding.cardTodayAdm.root, stats.totalActivePrescriptions.toString(),
             getString(R.string.dashboard_today_adm))
 
-        // Progress
-        binding.tvCompleted.text = data.completedAdministrations.toString()
-        binding.tvRefused.text = data.refusedAdministrations.toString()
+        // Progress (compliance rate)
+        binding.tvCompleted.text = "${stats.complianceRate.toInt()}%"
+        binding.progressBar.progress = stats.complianceRate.toInt()
 
-        val total = data.todayAdministrations
-        if (total > 0) {
-            val progress = (data.completedAdministrations * 100) / total
-            binding.progressBar.progress = progress
-        }
-
-        // Alert
-        if (data.activeInteractions > 0) {
+        // Alert card
+        if (stats.criticalInteractions > 0) {
             binding.cardAlert.visibility = View.VISIBLE
-            binding.tvAlert.text = "${data.activeInteractions} interaction(s) majeure(s) a traiter"
+            binding.tvAlert.text = "${stats.criticalInteractions} interaction(s) critique(s) a traiter"
         } else {
             binding.cardAlert.visibility = View.GONE
         }

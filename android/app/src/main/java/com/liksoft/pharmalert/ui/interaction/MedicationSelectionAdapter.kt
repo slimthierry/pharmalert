@@ -29,7 +29,7 @@ class MedicationSelectionAdapter(
 
         fun bind(med: MedicationResponse) {
             binding.tvName.text = med.name
-            binding.tvAtc.text = med.atc_code ?: ""
+            binding.tvAtc.text = med.atcCode ?: ""
             binding.checkbox.isChecked = med.id in selectedIds
 
             binding.checkbox.setOnCheckedChangeListener { _, isChecked ->

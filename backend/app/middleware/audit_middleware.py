@@ -1,3 +1,4 @@
+import asyncio
 import time
 import logging
 from typing import Optional
@@ -36,18 +37,20 @@ class AuditMiddleware(BaseHTTPMiddleware):
 
         # Log asynchronously without blocking the response
         try:
-            await self._log_request(
-                user_id=user_id,
-                action=f"{request.method} {request.url.path}",
-                entity_type="api_request",
-                details={
-                    "method": request.method,
-                    "path": request.url.path,
-                    "query_params": str(request.query_params),
-                    "status_code": response.status_code,
-                    "duration_ms": duration_ms,
-                },
-                ip_address=ip_address,
+            asyncio.get_event_loop().create_task(
+                self._log_request(
+                    user_id=user_id,
+                    action=f"{request.method} {request.url.path}",
+                    entity_type="api_request",
+                    details={
+                        "method": request.method,
+                        "path": request.url.path,
+                        "query_params": str(request.query_params),
+                        "status_code": response.status_code,
+                        "duration_ms": duration_ms,
+                    },
+                    ip_address=ip_address,
+                )
             )
         except Exception as e:
             logger.error(f"Failed to log audit entry: {e}")
@@ -78,13 +81,16 @@ class AuditMiddleware(BaseHTTPMiddleware):
         ip_address: Optional[str],
     ) -> None:
         """Log the request to the audit table."""
-        async with AsyncSessionLocal() as session:
-            audit_entry = AuditLog(
-                user_id=user_id,
-                action=action,
-                entity_type=entity_type,
-                details=details,
-                ip_address=ip_address,
-            )
-            session.add(audit_entry)
-            await session.commit()
+        try:
+            async with AsyncSessionLocal() as session:
+                audit_entry = AuditLog(
+                    user_id=user_id,
+                    action=action,
+                    entity_type=entity_type,
+                    details=details,
+                    ip_address=ip_address,
+                )
+                session.add(audit_entry)
+                await session.commit()
+        except Exception as e:
+            logger.error(f"Failed to write audit log: {e}")

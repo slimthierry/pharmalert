@@ -8,11 +8,16 @@ from app.config.database import engine
 from app.middleware.audit_middleware import AuditMiddleware
 from app.loggers import setup_logging
 from app.routes import app_router
+from app.libs.event_loop import init_event_loop, _policy_instance
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown."""
+    init_event_loop()
     yield
+    if _policy_instance:
+        _policy_instance.close()
     await engine.dispose()
 app = FastAPI(
     title="PharmAlert API",

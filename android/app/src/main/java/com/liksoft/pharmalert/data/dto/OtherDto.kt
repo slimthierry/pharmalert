@@ -50,15 +50,31 @@ data class AllergyListResponse(
 
 @Serializable
 data class DashboardResponse(
-    @SerialName("pending_prescriptions") val pendingPrescriptions: Int,
-    @SerialName("pending_administrations") val pendingAdministrations: Int,
-    @SerialName("active_interactions") val activeInteractions: Int,
-    @SerialName("today_administrations") val todayAdministrations: Int,
-    @SerialName("completed_administrations") val completedAdministrations: Int,
-    @SerialName("refused_administrations") val refusedAdministrations: Int,
-    @SerialName("pending_interactions") val pendingInteractions: Int? = null,
-    @SerialName("total_prescriptions") val totalPrescriptions: Int? = null,
-    @SerialName("total_adverse_events") val totalAdverseEvents: Int? = null
+    val stats: DashboardStats,
+    val alerts: DashboardAlerts
+)
+
+@Serializable
+data class DashboardStats(
+    @SerialName("pending_validations") val pendingValidations: Int,
+    @SerialName("critical_interactions") val criticalInteractions: Int,
+    @SerialName("missed_doses_today") val missedDosesToday: Int,
+    @SerialName("compliance_rate") val complianceRate: Double,
+    @SerialName("total_active_prescriptions") val totalActivePrescriptions: Int,
+    @SerialName("total_patients") val totalPatients: Int
+)
+
+@Serializable
+data class DashboardAlerts(
+    @SerialName("critical_interactions") val criticalInteractions: List<AlertItem>,
+    @SerialName("recent_adverse_events") val recentAdverseEvents: List<AlertItem>
+)
+
+@Serializable
+data class AlertItem(
+    val id: Int,
+    val message: String? = null,
+    val severity: String? = null
 )
 
 @Serializable

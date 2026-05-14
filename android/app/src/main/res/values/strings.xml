@@ -21,10 +21,10 @@
 
     <!-- Dashboard -->
     <string name="dashboard_welcome">Bienvenue, %s</string>
-    <string name="dashboard_pending_rx">Prescriptions en attente</string>
-    <string name="dashboard_pending_adm">Administrations en attente</string>
-    <string name="dashboard_active_inter">Interactions actives</string>
-    <string name="dashboard_today_adm">Administrations du jour</string>
+    <string name="dashboard_pending_rx">Validations en attente</string>
+    <string name="dashboard_pending_adm">Doses manq. aujourd\'hui</string>
+    <string name="dashboard_active_inter">Interactions critiques</string>
+    <string name="dashboard_today_adm">Prescriptions actives</string>
 
     <!-- Prescription -->
     <string name="rx_patient">Patient</string>
