@@ -9,6 +9,9 @@ import AdministrationsPage from './pages/AdministrationsPage';
 import AllergiesPage from './pages/AllergiesPage';
 import AdverseEventsPage from './pages/AdverseEventsPage';
 import AuditPage from './pages/AuditPage';
+import EntitiesPage from './pages/EntitiesPage';
+import SettingsPage from './pages/SettingsPage';
+import { EntityProvider } from './hooks/useEntity';
 
 const STORAGE_KEY = 'pharmalert-theme';
 
@@ -62,26 +65,30 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <ThemeProvider>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/"
-          element={
-            <AuthGuard>
-              <AppLayout />
-            </AuthGuard>
-          }
-        >
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="prescriptions" element={<PrescriptionsPage />} />
-          <Route path="interactions" element={<InteractionsPage />} />
-          <Route path="administrations" element={<AdministrationsPage />} />
-          <Route path="allergies" element={<AllergiesPage />} />
-          <Route path="adverse-events" element={<AdverseEventsPage />} />
-          <Route path="audit" element={<AuditPage />} />
-        </Route>
-      </Routes>
+      <EntityProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <AuthGuard>
+                <AppLayout />
+              </AuthGuard>
+            }
+          >
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="prescriptions" element={<PrescriptionsPage />} />
+            <Route path="interactions" element={<InteractionsPage />} />
+            <Route path="administrations" element={<AdministrationsPage />} />
+            <Route path="allergies" element={<AllergiesPage />} />
+            <Route path="adverse-events" element={<AdverseEventsPage />} />
+            <Route path="audit" element={<AuditPage />} />
+            <Route path="entities" element={<EntitiesPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+        </Routes>
+      </EntityProvider>
     </ThemeProvider>
   );
 }

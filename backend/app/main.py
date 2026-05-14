@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import settings
 from app.config.database import engine
 from app.middleware.audit_middleware import AuditMiddleware
+from app.middleware.entity_context import EntityContextMiddleware
 from app.loggers import setup_logging
 from app.routes import app_router
 from app.libs.event_loop import init_event_loop, _policy_instance
@@ -42,6 +43,9 @@ app.add_middleware(
 
 # Audit middleware
 app.add_middleware(AuditMiddleware)
+
+# Entity context middleware (multi-tenant)
+app.add_middleware(EntityContextMiddleware)
 
 # Register all routes from app_router
 app.include_router(app_router)

@@ -67,6 +67,11 @@ class InteractionCheckResponse(BaseModel):
     allergy_warnings: List[str] = []
 
 
+class InteractionMatrixRequest(BaseModel):
+    """Request body for getting interaction matrix between medications."""
+    medication_ids: List[int]
+
+
 class InteractionMatrixEntry(BaseModel):
     medication_a_id: int
     medication_b_id: int

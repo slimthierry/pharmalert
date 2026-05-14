@@ -237,4 +237,159 @@ export const audit = {
   },
 };
 
+// ========================
+// Entities
+// ========================
+
+export const entities = {
+  list: (params?: { skip?: number; limit?: number; include_inactive?: boolean }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.skip) searchParams.set('skip', String(params.skip));
+    if (params?.limit) searchParams.set('limit', String(params.limit));
+    if (params?.include_inactive) searchParams.set('include_inactive', 'true');
+    return request<{ entities: import('../types').Entity[]; total: number }>(`/entities/?${searchParams}`);
+  },
+
+  brief: () =>
+    request<import('../types').EntityBrief[]>(`/entities/brief`),
+
+  get: (id: number) =>
+    request<import('../types').Entity>(`/entities/${id}`),
+
+  create: (data: Partial<import('../types').Entity>) =>
+    request<import('../types').Entity>(`/entities/`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: number, data: Partial<import('../types').Entity>) =>
+    request<import('../types').Entity>(`/entities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: number) =>
+    request<void>(`/entities/${id}`, { method: 'DELETE' }),
+
+  // User assignments
+  getMyEntities: () =>
+    request<import('../types').EntityBrief[]>(`/entities/me/entities`),
+
+  getMyDefaultEntity: () =>
+    request<import('../types').EntityBrief | null>(`/entities/me/default-entity`),
+
+  assignUser: (data: {
+    user_id: number;
+    entity_id: number;
+    is_default?: boolean;
+    start_date?: string;
+    end_date?: string;
+    assignment_reason?: string;
+  }) =>
+    request<import('../types').EntityUserAssignment>(`/entities/assignments`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  getUserEntities: (userId: number) =>
+    request<import('../types').UserWithEntities>(`/entities/assignments/user/${userId}`),
+
+  updateAssignment: (id: number, data: Partial<import('../types').EntityUserAssignment>) =>
+    request<import('../types').EntityUserAssignment>(`/entities/assignments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  removeAssignment: (id: number) =>
+    request<void>(`/entities/assignments/${id}`, { method: 'DELETE' }),
+
+  // Entity services
+  listServices: (entityId: number, includeInactive?: boolean) => {
+    const params = new URLSearchParams();
+    if (includeInactive) params.set('include_inactive', 'true');
+    return request<{ services: import('../types').EntityService[]; total: number }>(
+      `/entities/${entityId}/services?${params}`
+    );
+  },
+
+  createService: (entityId: number, data: Partial<import('../types').EntityService>) =>
+    request<import('../types').EntityService>(`/entities/${entityId}/services`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+};
+
+// ========================
+// Settings
+// ========================
+
+export const settings = {
+  list: (params?: { group?: string; entity_id?: number; skip?: number; limit?: number }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.group) searchParams.set('group', params.group);
+    if (params?.entity_id) searchParams.set('entity_id', String(params.entity_id));
+    if (params?.skip) searchParams.set('skip', String(params.skip));
+    if (params?.limit) searchParams.set('limit', String(params.limit));
+    return request<{ configs: import('../types').SystemConfig[]; total: number }>(`/settings/?${searchParams}`);
+  },
+
+  grouped: (entityId?: number) => {
+    const params = entityId ? `?entity_id=${entityId}` : '';
+    return request<import('../types').SettingsGroup[]>(`/settings/grouped${params}`);
+  },
+
+  getByKey: (key: string, entityId?: number) => {
+    const params = entityId ? `?entity_id=${entityId}` : '';
+    return request<import('../types').SystemConfig>(`/settings/by-key/${key}${params}`);
+  },
+
+  create: (data: Partial<import('../types').SystemConfig>) =>
+    request<import('../types').SystemConfig>(`/settings/`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: number, data: Partial<import('../types').SystemConfig>) =>
+    request<import('../types').SystemConfig>(`/settings/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  updateByKey: (key: string, value: string, entityId?: number) => {
+    const params = entityId ? `?entity_id=${entityId}` : '';
+    return request<import('../types').SystemConfig>(`/settings/by-key/${key}${params}`, {
+      method: 'PUT',
+      body: JSON.stringify(value),
+    });
+  },
+
+  bulkUpdate: (updates: { key: string; value: string }[], entityId?: number) => {
+    const params = entityId ? `?entity_id=${entityId}` : '';
+    return request<import('../types').SystemConfig[]>(`/settings/bulk-update${params}`, {
+      method: 'POST',
+      body: JSON.stringify({ updates }),
+    });
+  },
+
+  delete: (id: number) =>
+    request<void>(`/settings/${id}`, { method: 'DELETE' }),
+
+  seed: () =>
+    request<{ message: string }>(`/settings/seed`, { method: 'POST' }),
+
+  // Public endpoints (no auth required)
+  getPublic: (key: string, entityId?: number) => {
+    const params = new URLSearchParams();
+    if (entityId) params.set('entity_id', String(entityId));
+    return request<{ key: string; value: unknown }>(`/settings/public/${key}?${params}`);
+  },
+
+  getPublicGrouped: (entityId?: number) => {
+    const params = entityId ? `?entity_id=${entityId}` : '';
+    return request<{ group: string; group_name: string; icon?: string; configs: { key: string; value: string; display_name: string }[] }[]>(
+      `/settings/public/grouped${params}`
+    );
+  },
+};
+
 export { ApiError };

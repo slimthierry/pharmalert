@@ -222,6 +222,117 @@ export interface AuditLog {
 }
 
 // ========================
+// Entity types (Multi-tenant)
+// ========================
+
+export interface Entity {
+  id: number;
+  name: string;
+  code: string;
+  description?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  city?: string;
+  country?: string;
+  logo_url?: string;
+  is_active: boolean;
+  is_default: boolean;
+  subscription_start?: string;
+  subscription_end?: string;
+  max_users: number;
+  is_subscription_valid: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EntityBrief {
+  id: number;
+  name: string;
+  code: string;
+  logo_url?: string;
+  is_active: boolean;
+}
+
+export interface EntityUserAssignment {
+  id: number;
+  user_id: number;
+  entity_id: number;
+  is_default: boolean;
+  start_date?: string;
+  end_date?: string;
+  is_active: boolean;
+  assigned_by?: number;
+  assignment_reason?: string;
+  is_valid: boolean;
+  created_at: string;
+}
+
+export interface UserWithEntities {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+  can_access_all_entities: boolean;
+  assignments: EntityUserAssignment[];
+  default_entity?: EntityBrief;
+}
+
+export interface EntityService {
+  id: number;
+  entity_id: number;
+  name: string;
+  code: string;
+  description?: string;
+  category?: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+}
+
+// ========================
+// Settings types
+// ========================
+
+export interface ConfigGroup {
+  id: number;
+  key: string;
+  name: string;
+  description?: string;
+  icon?: string;
+  display_order: number;
+  is_active: boolean;
+}
+
+export interface SystemConfig {
+  id: number;
+  key: string;
+  value?: string;
+  group: string;
+  description?: string;
+  display_name?: string;
+  is_secret: boolean;
+  is_required: boolean;
+  is_editable: boolean;
+  value_type: ConfigValueType;
+  default_value?: string;
+  choices?: string;
+  is_global: boolean;
+  entity_id?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type ConfigValueType = 'string' | 'boolean' | 'integer' | 'float' | 'json' | 'url' | 'email' | 'color';
+
+export interface SettingsGroup {
+  group: string;
+  group_name: string;
+  icon?: string;
+  configs: SystemConfig[];
+}
+
+// ========================
 // API Response types
 // ========================
 
