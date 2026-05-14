@@ -14,7 +14,7 @@ const statusConfig: Record<string, { icon: React.ElementType; color: string; lab
   delayed: { icon: Clock, color: 'text-amber-500', label: 'Retarde' },
 };
 
-export function DoseSchedule({ administrations, onRecord }: DoseScheduleProps) {
+export function DoseSchedule({ administrations, onRecord = undefined }: DoseScheduleProps) {
   const formatTime = (dateStr: string) => {
     return new Date(dateStr).toLocaleTimeString('fr-FR', {
       hour: '2-digit',

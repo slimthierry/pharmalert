@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Bug, BarChart3, Filter } from 'lucide-react';
+import { Plus, Bug, BarChart3 } from 'lucide-react';
 
 interface AdverseEvent {
   id: number;

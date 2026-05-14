@@ -2,7 +2,7 @@
  * Webhook client for sending PharmAlert notifications to external systems.
  */
 
-import { WebhookEventType, createWebhookPayload, type WebhookPayload } from './events';
+import { WebhookEventType, createWebhookPayload } from './events';
 
 export interface WebhookClientConfig {
   urls: string[];
@@ -102,11 +102,6 @@ export class WebhookClient {
   }
 
   private async generateSignature(payload: string): Promise<string> {
-    if (typeof globalThis.crypto === 'undefined') {
-      const { createHmac } = await import('crypto');
-      return createHmac('sha256', this.secret).update(payload).digest('hex');
-    }
-
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(
       'raw',

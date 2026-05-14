@@ -37,14 +37,6 @@ export async function verifyWebhookSignature(
   signature: string,
   secret: string,
 ): Promise<boolean> {
-  if (typeof globalThis.crypto === 'undefined') {
-    // Node.js environment fallback
-    const { createHmac } = await import('crypto');
-    const expected = createHmac('sha256', secret).update(payload).digest('hex');
-    return expected === signature;
-  }
-
-  // Web Crypto API
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     'raw',

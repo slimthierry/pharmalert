@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PharmAlert</string>
+
+    <!-- Auth -->
+    <string name="login_title">PharmAlert</string>
+    <string name="login_subtitle">Module SIH - Interactions medicamenteuses</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Mot de passe</string>
+    <string name="login_button">Se connecter</string>
+    <string name="login_error">Email ou mot de passe incorrect</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Tableau de bord</string>
+    <string name="nav_prescriptions">Prescriptions</string>
+    <string name="nav_interactions">Interactions</string>
+    <string name="nav_administrations">Administrations</string>
+    <string name="nav_allergies">Allergies</string>
+    <string name="nav_audit">Audit</string>
+    <string name="logout">Deconnexion</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_welcome">Bienvenue, %s</string>
+    <string name="dashboard_pending_rx">Prescriptions en attente</string>
+    <string name="dashboard_pending_adm">Administrations en attente</string>
+    <string name="dashboard_active_inter">Interactions actives</string>
+    <string name="dashboard_today_adm">Administrations du jour</string>
+
+    <!-- Prescription -->
+    <string name="rx_patient">Patient</string>
+    <string name="rx_medication">Medicament</string>
+    <string name="rx_dosage">Dosage</string>
+    <string name="rx_frequency">Frequence</string>
+    <string name="rx_route">Voie</string>
+    <string name="rx_status">Statut</string>
+    <string name="rx_validate">Valider</string>
+    <string name="rx_reject">Rejeter</string>
+
+    <!-- Interaction -->
+    <string name="inter_contraindicated">Contre-indication</string>
+    <string name="inter_major">Interaction majeure</string>
+    <string name="inter_moderate">Interaction moderee</string>
+    <string name="inter_minor">Interaction mineure</string>
+    <string name="inter_clinical_effect">Effet clinique</string>
+    <string name="inter_recommendation">Recommandation</string>
+
+    <!-- Administration -->
+    <string name="adm_record">Enregistrer</string>
+    <string name="adm_given">Donne</string>
+    <string name="adm_refused">Refuse</string>
+    <string name="adm_delayed">Retarde</string>
+    <string name="adm_missed">Oubli</string>
+
+    <!-- Common -->
+    <string name="loading">Chargement...</string>
+    <string name="error">Erreur</string>
+    <string name="retry">Reessayer</string>
+    <string name="search">Rechercher</string>
+    <string name="no_data">Aucune donnee</string>
+</resources>

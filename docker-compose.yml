@@ -40,7 +40,7 @@ services:
     container_name: pharmalert-backend
     restart: unless-stopped
     ports:
-      - "96000:96000"
+      - "9600:9600"
     environment:
       DATABASE_URL: postgresql+asyncpg://pharmalert:pharmalert_secret@postgres:5432/pharmalert
       REDIS_URL: redis://redis:6379/0
@@ -56,14 +56,14 @@ services:
 
   web:
     build:
-      context: .
-      dockerfile: apps/web/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: pharmalert-web
     restart: unless-stopped
     ports:
       - "3900:3900"
     environment:
-      VITE_API_URL: http://localhost:96000
+      VITE_API_URL: http://localhost:9600
     depends_on:
       - backend
 

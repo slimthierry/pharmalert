@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PharmAlert Brand Colors (Blue #3B82F6) -->
+    <color name="brand_50">#EFF6FF</color>
+    <color name="brand_100">#DBEAFE</color>
+    <color name="brand_200">#BFDBFE</color>
+    <color name="brand_300">#93C5FD</color>
+    <color name="brand_400">#60A5FA</color>
+    <color name="brand_500">#3B82F6</color>
+    <color name="brand_600">#2563EB</color>
+    <color name="brand_700">#1D4ED8</color>
+    <color name="brand_800">#1E40AF</color>
+    <color name="brand_900">#1E3A8A</color>
+
+    <!-- Severity Colors -->
+    <color name="severity_minor">#22C55E</color>
+    <color name="severity_moderate">#F59E0B</color>
+    <color name="severity_major">#F97316</color>
+    <color name="severity_contraindicated">#EF4444</color>
+
+    <!-- Status Colors -->
+    <color name="status_pending">#F59E0B</color>
+    <color name="status_validated">#22C55E</color>
+    <color name="status_rejected">#EF4444</color>
+    <color name="status_given">#22C55E</color>
+    <color name="status_refused">#EF4444</color>
+
+    <!-- Base Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray_50">#F9FAFB</color>
+    <color name="gray_100">#F3F4F6</color>
+    <color name="gray_200">#E5E7EB</color>
+    <color name="gray_300">#D1D5DB</color>
+    <color name="gray_400">#9CA3AF</color>
+    <color name="gray_500">#6B7280</color>
+    <color name="gray_600">#4B5563</color>
+    <color name="gray_700">#374151</color>
+    <color name="gray_800">#1F2937</color>
+    <color name="gray_900">#111827</color>
+</resources>

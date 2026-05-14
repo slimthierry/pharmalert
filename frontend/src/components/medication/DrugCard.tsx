@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pill } from 'lucide-react';
 import type { Medication } from '../../types';
 

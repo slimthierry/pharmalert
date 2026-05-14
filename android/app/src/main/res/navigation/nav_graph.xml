@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_dashboard">
+
+    <fragment
+        android:id="@+id/nav_dashboard"
+        android:name="com.liksoft.pharmalert.ui.dashboard.DashboardFragment"
+        android:label="@string/nav_dashboard" />
+
+    <fragment
+        android:id="@+id/nav_prescriptions"
+        android:name="com.liksoft.pharmalert.ui.prescription.PrescriptionFragment"
+        android:label="@string/nav_prescriptions" />
+
+    <fragment
+        android:id="@+id/nav_interactions"
+        android:name="com.liksoft.pharmalert.ui.interaction.InteractionFragment"
+        android:label="@string/nav_interactions" />
+
+    <fragment
+        android:id="@+id/nav_administrations"
+        android:name="com.liksoft.pharmalert.ui.administration.AdministrationFragment"
+        android:label="@string/nav_administrations" />
+
+    <fragment
+        android:id="@+id/nav_allergies"
+        android:name="com.liksoft.pharmalert.ui.allergy.AllergyFragment"
+        android:label="@string/nav_allergies" />
+
+    <fragment
+        android:id="@+id/nav_audit"
+        android:name="com.liksoft.pharmalert.ui.audit.AuditFragment"
+        android:label="@string/nav_audit" />
+
+</navigation>

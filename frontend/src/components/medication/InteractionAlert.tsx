@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertTriangle, ShieldX, ShieldAlert, ShieldCheck } from 'lucide-react';
-import type { InteractionCheckResult, InteractionSeverity } from '../../types';
+import type { InteractionCheckResult } from '../../types';
 import { getSeverityColor } from '../../utils';
 
 interface InteractionAlertProps {

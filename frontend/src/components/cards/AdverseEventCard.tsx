@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bug } from 'lucide-react';
 import type { AdverseEvent } from '../../types';
 import { getSeverityColor } from '../../utils';
