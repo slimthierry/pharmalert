@@ -126,18 +126,16 @@ class SIHClient:
         Récupère les patients depuis Odoo.
         """
         try:
-            ids = self._call('likmed.patient.base', 'search_read', [], {
+            return self._call('likmed.patient.base', 'search_read', [], {
                 'offset': offset,
                 'limit': limit,
                 'order': 'id desc',
                 'fields': [
                     'id', 'reference', 'name', 'last_name', 'first_name',
                     'gender', 'birth_date', 'phone', 'email', 'address',
-                    'is_hospitalized', 'has_insurance', 'patient_insurance_id',
-                    'active'
+                    'is_hospitalized', 'patient_insurance_id', 'active'
                 ]
-            })
-            return ids or []
+            }) or []
         except Exception as e:
             logger.error(f"Error fetching patients: {e}")
             return []
@@ -205,9 +203,9 @@ class SIHClient:
                 'limit': limit,
                 'order': 'date desc',
                 'fields': [
-                    'id', 'name', 'date', 'patient_id', 'doctor_id',
+                    'id', 'name', 'date', 'patient_id',
                     'service_id', 'state', 'notes', 'order_line_ids',
-                    'medical_person_id'
+                    'medical_person_id', 'order_type'
                 ]
             }) or []
         except Exception as e:
@@ -223,10 +221,11 @@ class SIHClient:
         try:
             return self._call('likmed.order.line', 'read', [line_ids], {
                 'fields': [
-                    'id', 'order_id', 'product_id', 'drug_name',
-                    'quantity', 'dosage', 'dose_per_take', 'frequency',
-                    'scheduled_times', 'route', 'start_date', 'end_date',
-                    'duration', 'meal_relation', 'dosage_instructions'
+                    'id', 'order_id', 'product_id', 'name',
+                    'quantity', 'dosage', 'dose_per_take', 'dose_unit',
+                    'frequency', 'scheduled_times', 'route',
+                    'start_date', 'end_date', 'duration',
+                    'meal_relation', 'dosage_instructions'
                 ]
             }) or []
         except Exception as e:
@@ -392,27 +391,34 @@ class SIHSyncService:
                         gender = gender_map.get(p.get('gender', ''), 'M')
 
                         if patient is None:
+                            ins_id = p.get('patient_insurance_id')
+                            if isinstance(ins_id, (list, tuple)):
+                                ins_id = ins_id[0] if ins_id else None
+                            has_ins = bool(ins_id)
+                            ins_num = str(ins_id) if ins_id else None
+
                             # Créer un nouveau patient PharmAlert
                             patient = Patient(
                                 entity_id=self.entity_id,
-                                ipp=f"SIH-{p['id']}",  # IPP basé sur l'ID SIH
-                                first_name=p.get('first_name', ''),
-                                last_name=p.get('last_name', ''),
+                                ipp=f"SIH-{p['id']}",
+                                first_name=p.get('first_name') or '',
+                                last_name=p.get('last_name') or '',
                                 birth_date=birth_date,
                                 gender=gender,
-                                phone=p.get('phone'),
-                                email=p.get('email'),
-                                address=p.get('address'),
+                                phone=p.get('phone') or None,
+                                email=p.get('email') or None,
+                                address=p.get('address') or None,
                                 is_hospitalized=p.get('is_hospitalized', False),
-                                sih_reference=str(p['id']),  # Référence externe SIH
+                                has_insurance=has_ins,
+                                insurance_number=ins_num,
+                                sih_reference=str(p['id']),
                                 created_at=datetime.utcnow(),
                                 updated_at=datetime.utcnow()
                             )
                             session.add(patient)
                         else:
-                            # Mettre à jour les informations
-                            patient.first_name = p.get('first_name', patient.first_name)
-                            patient.last_name = p.get('last_name', patient.last_name)
+                            patient.first_name = p.get('first_name') or patient.first_name
+                            patient.last_name = p.get('last_name') or patient.last_name
                             if birth_date:
                                 patient.birth_date = birth_date
                             if p.get('phone'):
@@ -425,6 +431,7 @@ class SIHSyncService:
 
                     except Exception as e:
                         logger.warning(f"Error syncing patient {p.get('id')}: {e}")
+                        await session.rollback()
                         continue
 
                 offset += batch_size
@@ -477,14 +484,11 @@ class SIHSyncService:
                     if medication is None:
                         medication = Medication(
                             entity_id=self.entity_id,
-                            name=d.get('name', ''),
-                            atc_code=d.get('code'),  # CIP code comme ATC
-                            atc_code_original=d.get('amm_number'),  # Numéro AMM
-                            form=d.get('classification_form', [None])[0] if isinstance(d.get('classification_form'), (list, tuple)) else d.get('classification_form'),
-                            dosage=d.get('dosage'),
+                            name=d.get('name', '') or '',
+                            atc_code=d.get('code') or None,
+                            atc_code_original=d.get('amm_number') or None,
                             active_principle=active_principle,
-                            manufacturer=d.get('manufacturer_id', [None])[1] if isinstance(d.get('manufacturer_id'), (list, tuple)) else None,
-                            stock_quantity=float(d.get('current_stock', 0)),
+                            stock_quantity=float(d.get('current_stock', 0)) or 0.0,
                             is_controlled=(d.get('stock_status') == 'out_of_stock'),
                             sih_reference=str(d['id']),
                             created_at=datetime.utcnow(),
@@ -492,15 +496,15 @@ class SIHSyncService:
                         )
                         session.add(medication)
                     else:
-                        medication.name = d.get('name', medication.name)
-                        medication.dosage = d.get('dosage', medication.dosage)
-                        medication.stock_quantity = float(d.get('current_stock', 0))
+                        medication.name = d.get('name', '') or medication.name
+                        medication.stock_quantity = float(d.get('current_stock', 0)) or 0.0
                         medication.updated_at = datetime.utcnow()
 
                     count += 1
 
                 except Exception as e:
                     logger.warning(f"Error syncing drug {d.get('id')}: {e}")
+                    await session.rollback()
                     continue
 
             await session.commit()
@@ -621,6 +625,7 @@ class SIHSyncService:
 
                     except Exception as e:
                         logger.warning(f"Error syncing order {order.get('id')}: {e}")
+                        await session.rollback()
                         continue
 
                 offset += batch_size
