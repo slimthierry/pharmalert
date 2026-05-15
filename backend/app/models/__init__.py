@@ -1,5 +1,6 @@
 from app.models.base import Base, TimestampMixin, EntityFilterMixin
 from app.models.user_models import User, UserRole
+from app.models.patient_models import Patient
 from app.models.medication_models import Medication, MedicationForm
 from app.models.interaction_models import Interaction, InteractionSeverity
 from app.models.prescription_models import Prescription, PrescriptionStatus
@@ -18,6 +19,8 @@ __all__ = [
     # Users
     "User",
     "UserRole",
+    # Patients
+    "Patient",
     # Medications
     "Medication",
     "MedicationForm",

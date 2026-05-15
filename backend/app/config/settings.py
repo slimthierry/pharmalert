@@ -32,6 +32,14 @@ class Settings(BaseSettings):
     WEBHOOK_URLS: List[str] = []
     WEBHOOK_SECRET: str = "webhook-secret-change-in-production"
 
+    # SIH Integration (Odoo Likmed)
+    # IMPORTANT: From Docker, use http://host.docker.internal:4430
+    # From local dev (no Docker), use http://localhost:4430
+    SIH_URL: str = "http://host.docker.internal:4430"
+    SIH_DB: str = "likmed_db"
+    SIH_USERNAME: str = "admin"
+    SIH_PASSWORD: str = ""
+
     class Config:
         env_file = ".env"
         case_sensitive = True

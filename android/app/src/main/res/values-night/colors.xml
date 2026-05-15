@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme colors -->
+    <color name="gray_50">#0F172A</color>
+    <color name="gray_100">#1E293B</color>
+    <color name="gray_200">#334155</color>
+    <color name="gray_300">#475569</color>
+    <color name="gray_400">#64748B</color>
+    <color name="gray_500">#94A3B8</color>
+    <color name="gray_600">#CBD5E1</color>
+    <color name="gray_700">#E2E8F0</color>
+    <color name="gray_800">#F1F5F9</color>
+    <color name="gray_900">#FFFFFF</color>
+
+    <!-- Red color for dark -->
+    <color name="red_500">#EF4444</color>
+
+    <!-- Text colors -->
+    <color name="text_color_primary">#F1F5F9</color>
+    <color name="text_color_secondary">#94A3B8</color>
+</resources>

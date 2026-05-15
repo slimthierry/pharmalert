@@ -7,11 +7,11 @@ Handles business logic for multi-entity support.
 from datetime import date
 from typing import Optional
 
-from sqlalchemy import select, and_, or_
+from sqlalchemy import select, and_, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.models.entity import Entity, EntityUserAssignment, EntityService
+from app.models.entity import Entity, EntityUserAssignment, EntityService as EntityServiceModel
 from app.models.user_models import User
 from app.schemas.entity_schemas import EntityCreate, EntityUpdate, EntityServiceCreate
 
@@ -73,12 +73,10 @@ class EntityService:
         entities = result.scalars().all()
 
         # Count total
-        count_query = select(Entity)
+        total_query = select(func.count(Entity.id)).select_from(Entity)
         if not include_inactive:
-            count_query = count_query.where(Entity.is_active == True)
-        count_result = await self.db.execute(select(Entity).fromyself(func.count(Entity.id)))
-        from sqlalchemy import func
-        total = await self.db.scalar(select(func.count(Entity.id)).select_from(Entity).where(Entity.is_active == True) if not include_inactive else select(func.count(Entity.id)).select_from(Entity))
+            total_query = total_query.where(Entity.is_active == True)
+        total = await self.db.scalar(total_query)
 
         return list(entities), total or 0
 
@@ -259,15 +257,15 @@ class EntityService:
         if not assignment:
             return False
 
-        return assignment.is_valid
+        return True  # assignment exists and is active
 
     # ========================
     # Entity Services
     # ========================
 
-    async def create_service(self, entity_id: int, data: EntityServiceCreate) -> EntityService:
+    async def create_service(self, entity_id: int, data: EntityServiceCreate) -> EntityServiceModel:
         """Create a service within an entity."""
-        service = EntityService(entity_id=entity_id, **data.model_dump())
+        service = EntityServiceModel(entity_id=entity_id, **data.model_dump())
         self.db.add(service)
         await self.db.commit()
         await self.db.refresh(service)
@@ -277,12 +275,12 @@ class EntityService:
         self,
         entity_id: int,
         include_inactive: bool = False
-    ) -> list[EntityService]:
+    ) -> list[EntityServiceModel]:
         """List all services for an entity."""
-        query = select(EntityService).where(EntityService.entity_id == entity_id)
+        query = select(EntityServiceModel).where(EntityServiceModel.entity_id == entity_id)
         if not include_inactive:
-            query = query.where(EntityService.is_active == True)
-        query = query.order_by(EntityService.display_order, EntityService.name)
+            query = query.where(EntityServiceModel.is_active == True)
+        query = query.order_by(EntityServiceModel.display_order, EntityServiceModel.name)
 
         result = await self.db.execute(query)
         return list(result.scalars().all())
@@ -291,10 +289,10 @@ class EntityService:
         self,
         service_id: int,
         data: EntityServiceCreate
-    ) -> Optional[EntityService]:
+    ) -> Optional[EntityServiceModel]:
         """Update a service."""
         result = await self.db.execute(
-            select(EntityService).where(EntityService.id == service_id)
+            select(EntityServiceModel).where(EntityServiceModel.id == service_id)
         )
         service = result.scalar_one_or_none()
         if not service:
@@ -311,7 +309,7 @@ class EntityService:
     async def delete_service(self, service_id: int) -> bool:
         """Delete a service."""
         result = await self.db.execute(
-            select(EntityService).where(EntityService.id == service_id)
+            select(EntityServiceModel).where(EntityServiceModel.id == service_id)
         )
         service = result.scalar_one_or_none()
         if not service:

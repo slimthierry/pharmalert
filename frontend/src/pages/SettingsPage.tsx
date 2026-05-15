@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { settings as settingsApi } from '../services/api';
 import { useSettings } from '../hooks/useSettings';
+import { useEntity } from '../hooks/useEntity';
 import type { SettingsGroup, SystemConfig } from '../types';
 
 const GROUP_ICONS: Record<string, React.ElementType> = {
@@ -44,11 +45,12 @@ const GROUP_COLORS: Record<string, string> = {
   notifications: 'bg-yellow-100 text-yellow-600',
   medical: 'bg-green-100 text-green-600',
   billing: 'bg-indigo-100 text-indigo-600',
-  general: 'bg-gray-100 text-gray-600',
+  general: 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]',
 };
 
 export default function SettingsPage() {
-  const { groups, isLoading, error, isDirty, updateSetting, bulkUpdate, loadSettings, clearCache } = useSettings();
+  const { currentEntity } = useEntity();
+  const { groups, isLoading, error, isDirty, updateSetting, bulkUpdate, loadSettings, clearCache } = useSettings(currentEntity?.id);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['branding', 'general']));
   const [editedValues, setEditedValues] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState(false);
@@ -118,7 +120,7 @@ export default function SettingsPage() {
     const isSecret = config.is_secret;
     const showValue = showSecret.has(config.key);
 
-    const baseInputClass = "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm";
+    const baseInputClass = "w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500 text-sm";
 
     switch (config.value_type) {
       case 'boolean':
@@ -132,9 +134,9 @@ export default function SettingsPage() {
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-colors" />
-              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-5 transition-transform" />
+              <div className="absolute left-1 top-1 w-4 h-4 bg-[var(--color-bg-primary)] rounded-full peer-checked:translate-x-5 transition-transform" />
             </div>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-[var(--color-text-secondary)]">
               {value === 'true' ? 'Activé' : 'Désactivé'}
             </span>
           </label>
@@ -237,7 +239,7 @@ export default function SettingsPage() {
                   }
                   setShowSecret(newShow);
                 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
               >
                 {showValue ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -270,11 +272,11 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-[var(--color-text-primary)] flex items-center gap-2">
             <Settings className="w-7 h-7" />
             Paramètres Système
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-[var(--color-text-secondary)] mt-1">
             Configurez l'application, les intégrations et les paramètres de sécurité
           </p>
         </div>
@@ -282,7 +284,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleSeed}
-            className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg flex items-center gap-2"
+            className="px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg flex items-center gap-2"
           >
             <RefreshCw className="w-4 h-4" />
             Initialiser
@@ -332,10 +334,10 @@ export default function SettingsPage() {
 
       {/* Settings Groups */}
       {groups.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
+        <div className="bg-[var(--color-bg-primary)] rounded-lg shadow p-12 text-center">
           <Settings className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun groupe de paramètres</h3>
-          <p className="text-gray-500 mb-4">
+          <h3 className="text-lg font-medium text-[var(--color-text-primary)] mb-2">Aucun groupe de paramètres</h3>
+          <p className="text-[var(--color-text-secondary)] mb-4">
             Cliquez sur "Initialiser" pour créer les paramètres par défaut
           </p>
         </div>
@@ -343,31 +345,31 @@ export default function SettingsPage() {
         <div className="space-y-4">
           {groups.map(group => {
             const Icon = GROUP_ICONS[group.group] || Settings;
-            const colorClass = GROUP_COLORS[group.group] || 'bg-gray-100 text-gray-600';
+            const colorClass = GROUP_COLORS[group.group] || 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)]';
             const isExpanded = expandedGroups.has(group.group);
 
             return (
-              <div key={group.group} className="bg-white rounded-lg shadow overflow-hidden">
+              <div key={group.group} className="bg-[var(--color-bg-primary)] rounded-lg shadow overflow-hidden">
                 {/* Group Header */}
                 <button
                   onClick={() => toggleGroup(group.group)}
-                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-[var(--color-bg-secondary)] transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass}`}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="text-left">
-                      <h3 className="font-semibold text-gray-900">{group.group_name}</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-semibold text-[var(--color-text-primary)]">{group.group_name}</h3>
+                      <p className="text-sm text-[var(--color-text-secondary)]">
                         {group.configs.length} paramètre{group.configs.length > 1 ? 's' : ''}
                       </p>
                     </div>
                   </div>
                   {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400" />
+                    <ChevronUp className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                    <ChevronDown className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                   )}
                 </button>
 
@@ -378,11 +380,11 @@ export default function SettingsPage() {
                       {group.configs.map(config => (
                         <div key={config.key} className="px-6 py-4 grid grid-cols-3 gap-4 items-center">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700">
+                            <label className="block text-sm font-medium text-[var(--color-text-primary)]">
                               {config.display_name || config.key}
                             </label>
                             {config.description && (
-                              <p className="text-xs text-gray-500 mt-0.5">{config.description}</p>
+                              <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">{config.description}</p>
                             )}
                           </div>
                           <div className="col-span-2">

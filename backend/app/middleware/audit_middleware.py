@@ -10,6 +10,7 @@ from starlette.responses import Response
 from app.config.database import AsyncSessionLocal
 from app.auth.security import decode_access_token
 from app.models.audit_models import AuditLog
+from app.libs.event_loop import _policy_instance
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +37,29 @@ class AuditMiddleware(BaseHTTPMiddleware):
         duration_ms = round((time.time() - start_time) * 1000)
 
         # Log asynchronously without blocking the response
-        try:
-            asyncio.get_event_loop().create_task(
-                self._log_request(
+        # Use the shared loop to avoid "different loop" errors
+        if _policy_instance:
+            loop = _policy_instance.get_event_loop()
+            loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(
+                    self._log_request(
+                        user_id=user_id,
+                        action=f"{request.method} {request.url.path}",
+                        entity_type="api_request",
+                        details={
+                            "method": request.method,
+                            "path": request.url.path,
+                            "query_params": str(request.query_params),
+                            "status_code": response.status_code,
+                            "duration_ms": duration_ms,
+                        },
+                        ip_address=ip_address,
+                    )
+                )
+            )
+        else:
+            try:
+                await self._log_request(
                     user_id=user_id,
                     action=f"{request.method} {request.url.path}",
                     entity_type="api_request",
@@ -51,9 +72,8 @@ class AuditMiddleware(BaseHTTPMiddleware):
                     },
                     ip_address=ip_address,
                 )
-            )
-        except Exception as e:
-            logger.error(f"Failed to log audit entry: {e}")
+            except Exception as e:
+                logger.error(f"Failed to log audit entry: {e}")
 
         return response
 

@@ -25,6 +25,9 @@
     <color name="status_given">#22C55E</color>
     <color name="status_refused">#EF4444</color>
 
+    <!-- Red colors -->
+    <color name="red_500">#EF4444</color>
+
     <!-- Base Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

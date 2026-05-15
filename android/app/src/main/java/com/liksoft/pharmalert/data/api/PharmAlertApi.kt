@@ -141,4 +141,123 @@ class PharmAlertApi(private val client: HttpClient, private val baseUrl: String)
             parameter("entity_type", entityType)
             auth()
         }.body()
+
+    // ========================
+    // Entities
+    // ========================
+
+    suspend fun getEntities(skip: Int = 0, limit: Int = 100, includeInactive: Boolean = false): EntityListResponse =
+        client.get("$baseUrl/entities/") {
+            parameter("skip", skip)
+            parameter("limit", limit)
+            if (includeInactive) parameter("include_inactive", "true")
+            auth()
+        }.body()
+
+    suspend fun getEntitiesBrief(): List<EntityBriefResponse> =
+        client.get("$baseUrl/entities/brief") { auth() }.body()
+
+    suspend fun getEntity(id: Int): EntityResponse =
+        client.get("$baseUrl/entities/$id") { auth() }.body()
+
+    suspend fun createEntity(request: Map<String, @UnsafeVariance Any>): EntityResponse =
+        client.post("$baseUrl/entities/") {
+            setBody(request)
+            auth()
+        }.body()
+
+    suspend fun updateEntity(id: Int, request: Map<String, @UnsafeVariance Any>): EntityResponse =
+        client.put("$baseUrl/entities/$id") {
+            setBody(request)
+            auth()
+        }.body()
+
+    suspend fun deleteEntity(id: Int): Unit =
+        client.delete("$baseUrl/entities/$id") { auth() }.body()
+
+    // User assignments
+    suspend fun getMyEntities(): List<EntityBriefResponse> =
+        client.get("$baseUrl/entities/me/entities") { auth() }.body()
+
+    suspend fun getMyDefaultEntity(): EntityBriefResponse? =
+        client.get("$baseUrl/entities/me/default-entity") { auth() }.body()
+
+    suspend fun assignUserToEntity(request: CreateAssignmentRequest): EntityUserAssignmentResponse =
+        client.post("$baseUrl/entities/assignments") {
+            setBody(request)
+            auth()
+        }.body()
+
+    suspend fun updateAssignment(id: Int, request: Map<String, @UnsafeVariance Any>): EntityUserAssignmentResponse =
+        client.put("$baseUrl/entities/assignments/$id") {
+            setBody(request)
+            auth()
+        }.body()
+
+    suspend fun removeAssignment(id: Int): Unit =
+        client.delete("$baseUrl/entities/assignments/$id") { auth() }.body()
+
+    // Entity services
+    suspend fun getEntityServices(entityId: Int, includeInactive: Boolean = false): EntityServiceListResponse =
+        client.get("$baseUrl/entities/$entityId/services") {
+            if (includeInactive) parameter("include_inactive", "true")
+            auth()
+        }.body()
+
+    suspend fun createEntityService(entityId: Int, request: Map<String, @UnsafeVariance Any>): EntityServiceResponse =
+        client.post("$baseUrl/entities/$entityId/services") {
+            setBody(request)
+            auth()
+        }.body()
+
+    // ========================
+    // Settings
+    // ========================
+
+    suspend fun getSettings(
+        group: String? = null,
+        entityId: Int? = null,
+        skip: Int = 0,
+        limit: Int = 100
+    ): SystemConfigListResponse = client.get("$baseUrl/settings/") {
+        parameter("skip", skip)
+        parameter("limit", limit)
+        group?.let { parameter("group", it) }
+        entityId?.let { parameter("entity_id", it) }
+        auth()
+    }.body()
+
+    suspend fun getSettingsGrouped(entityId: Int? = null): List<SettingsGroupResponse> {
+        val params = entityId?.let { "?entity_id=$it" } ?: ""
+        return client.get("$baseUrl/settings/grouped$params") { auth() }.body()
+    }
+
+    suspend fun getSettingByKey(key: String, entityId: Int? = null): SystemConfigResponse {
+        val params = entityId?.let { "?entity_id=$it" } ?: ""
+        return client.get("$baseUrl/settings/by-key/$key$params") { auth() }.body()
+    }
+
+    suspend fun updateSettingByKey(key: String, value: String, entityId: Int? = null): SystemConfigResponse {
+        val params = entityId?.let { "?entity_id=$it" } ?: ""
+        return client.put("$baseUrl/settings/by-key/$key$params") {
+            parameter("value", value)
+            auth()
+        }.body()
+    }
+
+    suspend fun bulkUpdateSettings(updates: List<ConfigUpdateRequest>, entityId: Int? = null): List<SystemConfigResponse> {
+        val params = entityId?.let { "?entity_id=$it" } ?: ""
+        return client.post("$baseUrl/settings/bulk-update$params") {
+            setBody(BulkUpdateRequest(updates))
+            auth()
+        }.body()
+    }
+
+    suspend fun seedSettings(): Map<String, String> =
+        client.post("$baseUrl/settings/seed") { auth() }.body()
+
+    suspend fun getPublicSettingsGrouped(entityId: Int? = null): List<SettingsGroupResponse> {
+        val params = entityId?.let { "?entity_id=$it" } ?: ""
+        return client.get("$baseUrl/settings/public/grouped$params") { auth() }.body()
+    }
 }

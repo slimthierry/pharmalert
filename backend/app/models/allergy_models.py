@@ -1,7 +1,8 @@
 import enum
+from typing import Optional
 
 from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin
 
@@ -31,10 +32,21 @@ class PatientAllergy(Base, TimestampMixin):
     __tablename__ = "patient_allergies"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    patient_ipp: Mapped[str] = mapped_column(
-        String(20), nullable=False, index=True,
-        comment="Identifiant Permanent du Patient"
+    entity_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("entities.id", ondelete="CASCADE"), nullable=False, index=True
     )
+
+    # Patient link (via Patient model)
+    patient_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("patients.id", ondelete="CASCADE"), nullable=True
+    )
+    # Legacy: keep patient_ipp for existing data
+    patient_ipp: Mapped[Optional[str]] = mapped_column(
+        String(20), nullable=True, index=True
+    )
+
+    # SIH reference
+    sih_reference: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
     allergen_type: Mapped[AllergenType] = mapped_column(
         Enum(AllergenType), nullable=False
     )
@@ -50,9 +62,12 @@ class PatientAllergy(Base, TimestampMixin):
         Enum(ReactionType), nullable=False, default=ReactionType.OTHER
     )
     confirmed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    reported_by: Mapped[int] = mapped_column(
+    reported_by: Mapped[Optional[int]] = mapped_column(
         Integer, ForeignKey("users.id"), nullable=True
     )
+
+    # Relations
+    patient: Mapped[Optional["Patient"]] = relationship("Patient", back_populates="allergies")
 
     def __repr__(self) -> str:
         return (

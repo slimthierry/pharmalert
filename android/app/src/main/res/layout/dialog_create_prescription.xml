@@ -17,7 +17,7 @@
             android:text="Nouvelle Prescription"
             android:textSize="20sp"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/brand_700"
+            android:textColor="?attr/colorPrimary"
             android:layout_marginBottom="20dp" />
 
         <!-- Patient IPP -->
@@ -36,6 +36,8 @@
                 android:id="@+id/etPatientIpp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -58,6 +60,8 @@
                 android:id="@+id/etPatientName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="textPersonName"
                 android:maxLines="1" />
 
@@ -80,11 +84,13 @@
                 android:id="@+id/actvMedication"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Dosage Value -->
+        <!-- Dosage Value + Unit -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,6 +114,8 @@
                     android:id="@+id/etDosageValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?android:textColorHint"
                     android:inputType="numberDecimal"
                     android:maxLines="1" />
 
@@ -129,6 +137,8 @@
                     android:id="@+id/actvDosageUnit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
+                    android:textColorHint="?android:textColorHint"
                     android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -152,6 +162,8 @@
                 android:id="@+id/actvFrequency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -173,6 +185,8 @@
                 android:id="@+id/actvRoute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -196,6 +210,8 @@
                 android:id="@+id/etStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="date"
                 android:focusable="false"
                 android:clickable="true"

@@ -20,8 +20,8 @@ from app.schemas.administration_schemas import (
     AdministrationListResponse
 )
 from app.schemas.allergy_schemas import (
-    PatientAllergyCreate, PatientAllergyUpdate, PatientAllergyResponse,
-    PatientAllergyListResponse
+    AllergyCreate, AllergyUpdate, AllergyResponse,
+    AllergyListResponse
 )
 from app.schemas.adverse_event_schemas import (
     AdverseEventCreate, AdverseEventUpdate, AdverseEventResponse,
@@ -77,24 +77,25 @@ __all__ = [
     "AdministrationResponse",
     "AdministrationListResponse",
     # Allergy
-    "PatientAllergyCreate",
-    "PatientAllergyUpdate",
-    "PatientAllergyResponse",
-    "PatientAllergyListResponse",
+    "AllergyCreate",
+    "AllergyUpdate",
+    "AllergyResponse",
+    "AllergyListResponse",
     # Adverse Event
     "AdverseEventCreate",
     "AdverseEventUpdate",
     "AdverseEventResponse",
     "AdverseEventListResponse",
-    "AdverseEventStatsResponse",
+    "AdverseEventStats",
     # Audit
     "AuditLogResponse",
     "AuditLogListResponse",
     # Dashboard
     "DashboardResponse",
-    "AlertItem",
+    "DashboardAlerts",
+    "DashboardStats",
     # FHIR
-    "FHIRBundleResponse",
+    "FHIRBundle",
     # Entity
     "EntityCreate",
     "EntityUpdate",

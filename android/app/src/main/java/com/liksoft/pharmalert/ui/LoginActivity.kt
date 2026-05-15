@@ -69,6 +69,8 @@ class LoginActivity : AppCompatActivity() {
                     role = response.role
                 )
                 SessionManager.login(response.accessToken, user)
+                // Load entities for multi-entity support
+                com.liksoft.pharmalert.util.EntityManager.loadEntitiesFromApi()
                 navigateToMain()
             } catch (e: Exception) {
                 setLoading(false)

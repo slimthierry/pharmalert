@@ -148,17 +148,17 @@ export default function EntitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-[var(--color-text-primary)] flex items-center gap-2">
             <Building2 className="w-7 h-7" />
             Établissements
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-[var(--color-text-secondary)] mt-1">
             Gérez les établissements hospitaliers et leurs configurations
           </p>
         </div>
         <button
           onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-brand)] text-white rounded-lg hover:bg-[var(--color-bg-brand-hover)] transition-colors"
         >
           <Plus className="w-4 h-4" />
           Nouvel établissement
@@ -168,13 +168,13 @@ export default function EntitiesPage() {
       {/* Search */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-tertiary)]" />
           <input
             type="text"
             placeholder="Rechercher un établissement..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -194,44 +194,44 @@ export default function EntitiesPage() {
         </div>
       ) : (
         /* Entity List */
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="bg-[var(--color-bg-primary)] rounded-lg shadow overflow-hidden">
+          <table className="min-w-full divide-y divide-[var(--color-border-primary)]">
+            <thead className="bg-[var(--color-bg-secondary)]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
                   Établissement
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
                   Code
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
                   Ville
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
                   Statut
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-[var(--color-bg-primary)] divide-y divide-[var(--color-border-primary)]">
               {filteredEntities.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-12 text-center text-[var(--color-text-secondary)]">
                     Aucun établissement trouvé
                   </td>
                 </tr>
               ) : (
                 filteredEntities.map(entity => (
-                  <tr key={entity.id} className="hover:bg-gray-50">
+                  <tr key={entity.id} className="hover:bg-[var(--color-bg-secondary)]">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <Building2 className="w-5 h-5 text-blue-600" />
+                          <Building2 className="w-5 h-5 text-[var(--color-text-brand)]" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 flex items-center gap-1">
+                          <div className="font-medium text-[var(--color-text-primary)] flex items-center gap-1">
                             {entity.name}
                             {entity.is_default && (
                               <span className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
@@ -239,12 +239,12 @@ export default function EntitiesPage() {
                               </span>
                             )}
                           </div>
-                          <div className="text-sm text-gray-500">{entity.email || '—'}</div>
+                          <div className="text-sm text-[var(--color-text-secondary)]">{entity.email || '—'}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{entity.code}</td>
-                    <td className="px-6 py-4 text-gray-600">{entity.city || '—'}</td>
+                    <td className="px-6 py-4 text-[var(--color-text-secondary)]">{entity.code}</td>
+                    <td className="px-6 py-4 text-[var(--color-text-secondary)]">{entity.city || '—'}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 text-xs rounded-full ${
                         entity.is_active
@@ -258,21 +258,21 @@ export default function EntitiesPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openAssignmentModal(entity)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                          className="p-2 text-[var(--color-text-brand)] bg-[var(--color-bg-secondary)] rounded-lg"
                           title="Gérer les utilisateurs"
                         >
                           <Users className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => openEditModal(entity)}
-                          className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                          className="p-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg"
                           title="Modifier"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(entity)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                          className="p-2 text-red-600 bg-[var(--color-bg-secondary)] rounded-lg"
                           title="Supprimer"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -290,12 +290,12 @@ export default function EntitiesPage() {
       {/* Entity Form Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+          <div className="bg-[var(--color-bg-primary)] rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b">
               <h2 className="text-lg font-semibold">
                 {editingEntity ? 'Modifier l\'établissement' : 'Nouvel établissement'}
               </h2>
-              <button onClick={() => setShowModal(false)} className="p-1 hover:bg-gray-100 rounded">
+              <button onClick={() => setShowModal(false)} className="p-1 hover:bg-[var(--color-bg-tertiary)] rounded">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -303,7 +303,7 @@ export default function EntitiesPage() {
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[calc(90vh-130px)]">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Nom de l'établissement *
                   </label>
                   <input
@@ -311,12 +311,12 @@ export default function EntitiesPage() {
                     required
                     value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Code *
                   </label>
                   <input
@@ -324,60 +324,60 @@ export default function EntitiesPage() {
                     required
                     value={formData.code}
                     onChange={e => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Ville
                   </label>
                   <input
                     type="text"
                     value={formData.city}
                     onChange={e => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Téléphone
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Email
                   </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Adresse
                   </label>
                   <input
                     type="text"
                     value={formData.address}
                     onChange={e => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1">
                     Nombre max d'utilisateurs
                   </label>
                   <input
@@ -385,7 +385,7 @@ export default function EntitiesPage() {
                     min="1"
                     value={formData.max_users}
                     onChange={e => setFormData({ ...formData, max_users: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border-primary)] rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -395,9 +395,9 @@ export default function EntitiesPage() {
                       type="checkbox"
                       checked={formData.is_active}
                       onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-[var(--color-border-primary)] text-[var(--color-text-brand)] focus:ring-blue-500"
                     />
-                    <span className="text-sm text-gray-700">Actif</span>
+                    <span className="text-sm text-[var(--color-text-primary)]">Actif</span>
                   </label>
 
                   <label className="flex items-center gap-2">
@@ -405,9 +405,9 @@ export default function EntitiesPage() {
                       type="checkbox"
                       checked={formData.is_default}
                       onChange={e => setFormData({ ...formData, is_default: e.target.checked })}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-[var(--color-border-primary)] text-[var(--color-text-brand)] focus:ring-blue-500"
                     />
-                    <span className="text-sm text-gray-700">Établissement par défaut</span>
+                    <span className="text-sm text-[var(--color-text-primary)]">Établissement par défaut</span>
                   </label>
                 </div>
               </div>
@@ -416,14 +416,14 @@ export default function EntitiesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                  className="px-4 py-2 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                  className="px-4 py-2 bg-[var(--color-bg-brand)] text-white rounded-lg hover:bg-[var(--color-bg-brand-hover)] disabled:opacity-50 flex items-center gap-2"
                 >
                   {isSaving ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

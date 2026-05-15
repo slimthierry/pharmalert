@@ -78,6 +78,10 @@ class DashboardFragment : Fragment() {
         binding.tvCompleted.text = "${stats.complianceRate.toInt()}%"
         binding.progressBar.progress = stats.complianceRate.toInt()
 
+        // Refused count - show as percentage complement
+        val refusedRate = (100 - stats.complianceRate.toInt()).coerceAtLeast(0)
+        binding.tvRefused.text = "$refusedRate%"
+
         // Alert card
         if (stats.criticalInteractions > 0) {
             binding.cardAlert.visibility = View.VISIBLE

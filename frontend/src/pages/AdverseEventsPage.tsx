@@ -39,7 +39,7 @@ const statusColors: Record<string, string> = {
   reported: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
   investigating: 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-400',
   confirmed: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  dismissed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+  dismissed: 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] dark:bg-gray-900/30 dark:text-[var(--color-text-tertiary)]',
 };
 
 export default function AdverseEventsPage() {

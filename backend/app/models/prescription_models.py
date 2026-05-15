@@ -1,5 +1,6 @@
 import enum
 from datetime import date, datetime
+from typing import Optional
 
 from sqlalchemy import Boolean, Date, Enum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -33,14 +34,23 @@ class Prescription(Base, TimestampMixin):
     __tablename__ = "prescriptions"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    patient_ipp: Mapped[str] = mapped_column(
-        String(20), nullable=False, index=True,
+    entity_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("entities.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+
+    # Patient link
+    patient_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("patients.id", ondelete="CASCADE"), nullable=True
+    )
+    patient_ipp: Mapped[Optional[str]] = mapped_column(
+        String(20), nullable=True, index=True,
         comment="Identifiant Permanent du Patient"
     )
-    patient_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    prescriber_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("users.id"), nullable=False
+    patient_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    prescriber_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("users.id"), nullable=True
     )
+    prescribed_by: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     medication_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("medications.id"), nullable=False
     )
@@ -72,7 +82,13 @@ class Prescription(Base, TimestampMixin):
         comment="Justification when doctor overrides a contraindicated interaction"
     )
 
+    # SIH reference
+    sih_reference: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
+
     # Relationships
+    patient: Mapped[Optional["Patient"]] = relationship(
+        "Patient", back_populates="prescriptions"
+    )
     prescriber = relationship(
         "User", back_populates="prescriptions", foreign_keys=[prescriber_id]
     )

@@ -14,6 +14,7 @@ from app.controllers import (
     audit,
     entities,
     settings,
+    sih,
 )
 from app.libs.fhir import (
     medication_request,
@@ -45,6 +46,9 @@ app_router.include_router(audit.router, prefix="/api/v1/audit", tags=["Audit"])
 # Entity & Settings routes
 app_router.include_router(entities.router, prefix="/api/v1/entities", tags=["Entities"])
 app_router.include_router(settings.router, prefix="/api/v1/settings", tags=["Settings"])
+
+# SIH Sync routes (Odoo Likmed integration)
+app_router.include_router(sih.router, prefix="/api/v1/sih", tags=["SIH Sync"])
 
 # FHIR routes
 app_router.include_router(

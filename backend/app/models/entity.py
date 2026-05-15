@@ -6,9 +6,9 @@ Users can be assigned to one or multiple entities.
 """
 
 from datetime import date, datetime
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Any
 
-from sqlalchemy import String, Text, Boolean, Date, DateTime, ForeignKey, func
+from sqlalchemy import String, Text, Boolean, Date, DateTime, ForeignKey, JSON, func
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -55,11 +55,21 @@ class Entity(Base, TimestampMixin):
     subscription_end: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     max_users: Mapped[int] = mapped_column(default=50, nullable=False)
 
+    # SIH Integration (Odoo Likmed)
+    sih_config: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    last_sih_sync: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+
     # Relations
     user_assignments: Mapped[list["EntityUserAssignment"]] = relationship(
         back_populates="entity", cascade="all, delete-orphan"
     )
     services: Mapped[list["EntityService"]] = relationship(
+        back_populates="entity", cascade="all, delete-orphan"
+    )
+    patients: Mapped[list["Patient"]] = relationship(
+        back_populates="entity", cascade="all, delete-orphan"
+    )
+    medications: Mapped[list["Medication"]] = relationship(
         back_populates="entity", cascade="all, delete-orphan"
     )
 

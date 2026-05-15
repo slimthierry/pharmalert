@@ -163,7 +163,6 @@ class CheckInteractionDialog : DialogFragment() {
         binding.cardResults.visibility = View.VISIBLE
 
         // Title with color based on severity
-        val hasIssues = response.interactions.isNotEmpty()
         val color = when {
             response.has_contraindicated -> R.color.severity_contraindicated
             response.hasMajor -> R.color.severity_major

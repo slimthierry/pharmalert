@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.PharmAlert" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/brand_500</item>
+        <item name="colorPrimaryVariant">@color/brand_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/brand_400</item>
+        <item name="colorSecondaryVariant">@color/brand_300</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/gray_900</item>
+        <item name="android:navigationBarColor">@color/gray_900</item>
+        <item name="android:windowBackground">@color/gray_900</item>
+        <!-- Fix text color for TextInputLayout in dark mode -->
+        <item name="android:textColorPrimary">@color/gray_100</item>
+        <item name="android:textColorSecondary">@color/gray_400</item>
+        <item name="android:textColorHint">@color/gray_500</item>
+        <item name="textInputStyle">@style/Widget.PharmAlert.TextInputLayout</item>
+    </style>
+
+    <!-- TextInputLayout style for dark mode -->
+    <style name="Widget.PharmAlert.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
+        <item name="hintTextColor">@color/brand_400</item>
+        <item name="android:textColorHint">@color/gray_500</item>
+    </style>
+</resources>

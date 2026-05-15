@@ -4,8 +4,8 @@ Entity management API endpoints.
 Handles CRUD for entities, user assignments, and services.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import select, func
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
+from sqlalchemy import select
 
 from app.auth.dependencies import CurrentUser, DbSession
 from app.auth.rbac import require_admin
@@ -22,21 +22,15 @@ from app.services.entity_service import EntityService
 router = APIRouter()
 
 
-# ========================
-# Entity CRUD
-# ========================
-
-
 @router.post("/", response_model=EntityResponse, status_code=status.HTTP_201_CREATED)
 async def create_entity(
     data: EntityCreate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(require_admin),
 ):
     """Create a new entity (admin only)."""
     service = EntityService(db)
 
-    # Check if code already exists
     existing = await service.get_entity_by_code(data.code)
     if existing:
         raise HTTPException(
@@ -50,10 +44,11 @@ async def create_entity(
 
 @router.get("/", response_model=EntityListResponse)
 async def list_entities(
+    current_user: CurrentUser,
+    db: DbSession,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
     include_inactive: bool = Query(False),
-    current_user: CurrentUser = Depends()
 ):
     """List all entities accessible to the current user."""
     service = EntityService(db)
@@ -70,7 +65,8 @@ async def list_entities(
 
 @router.get("/brief", response_model=list[EntityBriefResponse])
 async def list_entities_brief(
-    current_user: CurrentUser = Depends()
+    current_user: CurrentUser,
+    db: DbSession,
 ):
     """List all active entities (brief info for dropdowns)."""
     service = EntityService(db)
@@ -82,11 +78,50 @@ async def list_entities_brief(
     return [EntityBriefResponse.model_validate(e) for e in entities]
 
 
+# ── /me/* routes MUST come before /{entity_id} to avoid being shadowed ──
+
+@router.get("/me/entities", response_model=list[EntityBriefResponse])
+async def get_my_entities(
+    current_user: CurrentUser,
+    db: DbSession,
+):
+    """Get all entities the current user is assigned to."""
+    service = EntityService(db)
+    assignments = await service.get_user_entities(current_user.id)
+    return [EntityBriefResponse.model_validate(a.entity) for a in assignments if a.entity]
+
+
+@router.get("/me/default-entity", response_model=EntityBriefResponse | None)
+async def get_my_default_entity(
+    current_user: CurrentUser,
+    db: DbSession,
+):
+    """Get the current user's default entity."""
+    if current_user.can_access_all_entities:
+        from app.models.entity import Entity
+        result = await db.execute(
+            select(Entity).where(Entity.is_default == True)
+        )
+        entity = result.scalar_one_or_none()
+        if entity:
+            return EntityBriefResponse.model_validate(entity)
+
+    service = EntityService(db)
+    entity = await service.get_user_default_entity(current_user.id)
+    if not entity:
+        entities, _ = await service.list_entities(skip=0, limit=1, include_inactive=False)
+        if entities:
+            return EntityBriefResponse.model_validate(entities[0])
+        return None
+
+    return EntityBriefResponse.model_validate(entity)
+
+
 @router.get("/{entity_id}", response_model=EntityResponse)
 async def get_entity(
     entity_id: int,
+    current_user: CurrentUser,
     db: DbSession,
-    current_user: CurrentUser = Depends()
 ):
     """Get a specific entity."""
     service = EntityService(db)
@@ -106,7 +141,7 @@ async def update_entity(
     entity_id: int,
     data: EntityUpdate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Update an entity (admin only)."""
     service = EntityService(db)
@@ -125,7 +160,7 @@ async def update_entity(
 async def delete_entity(
     entity_id: int,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Delete an entity (soft delete - admin only)."""
     service = EntityService(db)
@@ -138,21 +173,15 @@ async def delete_entity(
         )
 
 
-# ========================
-# User-Entity Assignments
-# ========================
-
-
 @router.post("/assignments", response_model=EntityUserAssignmentResponse, status_code=status.HTTP_201_CREATED)
 async def assign_user_to_entity(
     data: EntityUserAssignmentCreate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    current_user: User = Depends(require_admin),
 ):
     """Assign a user to an entity (admin only)."""
     service = EntityService(db)
 
-    # Verify entity exists
     entity = await service.get_entity(data.entity_id)
     if not entity:
         raise HTTPException(
@@ -176,14 +205,11 @@ async def assign_user_to_entity(
 async def get_user_entities(
     user_id: int,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Get all entities a user is assigned to (admin only)."""
     service = EntityService(db)
-    from app.models.entity import EntityUserAssignment
-    from sqlalchemy.orm import selectinload
 
-    # Get user
     user_result = await db.execute(select(User).where(User.id == user_id))
     user = user_result.scalar_one_or_none()
     if not user:
@@ -192,7 +218,6 @@ async def get_user_entities(
             detail="Utilisateur non trouvé"
         )
 
-    # Get assignments
     assignments = await service.get_user_entities(user_id)
     default_entity = await service.get_user_default_entity(user_id)
 
@@ -212,10 +237,9 @@ async def update_assignment(
     assignment_id: int,
     data: EntityUserAssignmentUpdate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Update a user-entity assignment (admin only)."""
-    from sqlalchemy import update
     from app.models.entity import EntityUserAssignment
 
     result = await db.execute(
@@ -242,10 +266,9 @@ async def update_assignment(
 async def remove_user_from_entity(
     assignment_id: int,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Remove a user from an entity (admin only)."""
-    from sqlalchemy import select
     from app.models.entity import EntityUserAssignment
 
     result = await db.execute(
@@ -265,62 +288,16 @@ async def remove_user_from_entity(
     )
 
 
-@router.get("/me/entities", response_model=list[EntityBriefResponse])
-async def get_my_entities(
-    db: DbSession,
-    current_user: CurrentUser = Depends()
-):
-    """Get all entities the current user is assigned to."""
-    service = EntityService(db)
-    assignments = await service.get_user_entities(current_user.id)
-    return [EntityBriefResponse.model_validate(a.entity) for a in assignments if a.entity]
-
-
-@router.get("/me/default-entity", response_model=EntityBriefResponse | None)
-async def get_my_default_entity(
-    db: DbSession,
-    current_user: CurrentUser = Depends()
-):
-    """Get the current user's default entity."""
-    # Check if user has global access
-    if current_user.can_access_all_entities:
-        from sqlalchemy import select
-        from app.models.entity import Entity
-        result = await db.execute(
-            select(Entity).where(Entity.is_default == True)
-        )
-        entity = result.scalar_one_or_none()
-        if entity:
-            return EntityBriefResponse.model_validate(entity)
-
-    service = EntityService(db)
-    entity = await service.get_user_default_entity(current_user.id)
-    if not entity:
-        # Return first accessible entity
-        entities, _ = await service.list_entities(skip=0, limit=1, include_inactive=False)
-        if entities:
-            return EntityBriefResponse.model_validate(entities[0])
-        return None
-
-    return EntityBriefResponse.model_validate(entity)
-
-
-# ========================
-# Entity Services
-# ========================
-
-
 @router.post("/{entity_id}/services", response_model=EntityServiceResponse, status_code=status.HTTP_201_CREATED)
 async def create_entity_service(
     entity_id: int,
     data: EntityServiceCreate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Create a service within an entity (admin only)."""
     service = EntityService(db)
 
-    # Verify entity exists
     entity = await service.get_entity(entity_id)
     if not entity:
         raise HTTPException(
@@ -335,8 +312,9 @@ async def create_entity_service(
 @router.get("/{entity_id}/services", response_model=EntityServiceListResponse)
 async def list_entity_services(
     entity_id: int,
+    current_user: CurrentUser,
+    db: DbSession,
     include_inactive: bool = Query(False),
-    current_user: CurrentUser = Depends()
 ):
     """List all services for an entity."""
     service = EntityService(db)

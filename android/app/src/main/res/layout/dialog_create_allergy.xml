@@ -36,6 +36,8 @@
                 android:id="@+id/etPatientIpp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -58,6 +60,8 @@
                 android:id="@+id/actvAllergenType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -79,12 +83,14 @@
                 android:id="@+id/etAllergenName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="text"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ATC Code (optional) -->
+        <!-- ATC Code -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilAtcCode"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -101,6 +107,8 @@
                 android:id="@+id/etAtcCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="text"
                 android:maxLines="1" />
 
@@ -123,6 +131,8 @@
                 android:id="@+id/actvSeverity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -144,6 +154,8 @@
                 android:id="@+id/etReactionType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textColorHint="?android:textColorHint"
                 android:inputType="text"
                 android:maxLines="1" />
 

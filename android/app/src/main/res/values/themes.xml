@@ -11,6 +11,19 @@
         <item name="android:statusBarColor">@color/brand_700</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowBackground">@color/gray_50</item>
+        <!-- TextInputLayout colors -->
+        <item name="textInputStyle">@style/Widget.PharmAlert.TextInputLayout</item>
+        <!-- Force text colors for input fields -->
+        <item name="android:textColorPrimary">@color/gray_900</item>
+        <item name="android:textColorSecondary">@color/gray_600</item>
+        <item name="android:textColorHint">@color/gray_500</item>
+    </style>
+
+    <!-- TextInputLayout style for light mode -->
+    <style name="Widget.PharmAlert.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
+        <item name="hintTextColor">@color/brand_600</item>
+        <item name="android:textColorHint">@color/gray_500</item>
     </style>
 
     <style name="TextAppearance.PharmAlert.Title" parent="TextAppearance.Material3.HeadlineMedium">

@@ -7,7 +7,6 @@ Handles CRUD for system settings (key-value store).
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import select
 
 from app.auth.dependencies import CurrentUser, DbSession
 from app.auth.rbac import require_admin
@@ -22,14 +21,10 @@ from app.services.config_service import ConfigService, seed_default_configs
 router = APIRouter()
 
 
-# ========================
-# Config Groups
-# ========================
-
-
 @router.get("/groups", response_model=list[ConfigGroupResponse])
 async def list_config_groups(
-    current_user: User = Depends(require_admin)
+    db: DbSession,
+    _: User = Depends(require_admin),
 ):
     """List all config groups (admin only)."""
     service = ConfigService(db)
@@ -41,7 +36,7 @@ async def list_config_groups(
 async def create_config_group(
     data: ConfigGroupCreate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Create a new config group (admin only)."""
     service = ConfigService(db)
@@ -55,18 +50,14 @@ async def create_config_group(
     return ConfigGroupResponse.model_validate(group)
 
 
-# ========================
-# SystemConfig CRUD
-# ========================
-
-
 @router.get("/", response_model=SystemConfigListResponse)
 async def list_configs(
+    db: DbSession,
+    _: User = Depends(require_admin),
     group: Optional[str] = Query(None),
     entity_id: Optional[int] = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
-    current_user: User = Depends(require_admin)
 ):
     """List all system configs (admin only)."""
     service = ConfigService(db)
@@ -84,14 +75,11 @@ async def list_configs(
 
 @router.get("/grouped", response_model=list[SettingsGroupResponse])
 async def get_grouped_configs(
+    db: DbSession,
+    _: User = Depends(require_admin),
     entity_id: Optional[int] = Query(None),
-    current_user: User = Depends(require_admin)
 ):
-    """
-    Get all configs grouped by group.
-
-    Returns a structured list of groups with their configs.
-    """
+    """Get all configs grouped by group."""
     service = ConfigService(db)
     grouped = await service.get_grouped_configs(entity_id)
 
@@ -110,8 +98,9 @@ async def get_grouped_configs(
 @router.get("/by-key/{key}", response_model=SystemConfigResponse)
 async def get_config_by_key(
     key: str,
+    db: DbSession,
+    _: User = Depends(require_admin),
     entity_id: Optional[int] = Query(None),
-    current_user: User = Depends(require_admin)
 ):
     """Get a specific config by key (admin only)."""
     service = ConfigService(db)
@@ -130,12 +119,11 @@ async def get_config_by_key(
 async def create_config(
     data: SystemConfigCreate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Create a new system config (admin only)."""
     service = ConfigService(db)
 
-    # Check if key already exists
     existing = await service.get_config_by_key(data.key, data.entity_id)
     if existing:
         raise HTTPException(
@@ -165,7 +153,7 @@ async def update_config(
     config_id: int,
     data: SystemConfigUpdate,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Update a config entry (admin only)."""
     service = ConfigService(db)
@@ -186,9 +174,9 @@ async def update_config(
 async def update_config_by_key(
     key: str,
     value: str,
-    entity_id: Optional[int] = Query(None),
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
+    entity_id: Optional[int] = Query(None),
 ):
     """Update a config value by key (admin only)."""
     service = ConfigService(db)
@@ -206,9 +194,9 @@ async def update_config_by_key(
 @router.post("/bulk-update", response_model=list[SystemConfigResponse])
 async def bulk_update_configs(
     data: SystemConfigBulkUpdate,
-    entity_id: Optional[int] = Query(None),
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
+    entity_id: Optional[int] = Query(None),
 ):
     """Update multiple configs at once (admin only)."""
     service = ConfigService(db)
@@ -220,7 +208,7 @@ async def bulk_update_configs(
 async def delete_config(
     config_id: int,
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
     """Delete a config entry (admin only)."""
     service = ConfigService(db)
@@ -233,22 +221,13 @@ async def delete_config(
         )
 
 
-# ========================
-# Public Config Access (for frontend)
-# ========================
-
-
 @router.get("/public/{key}")
 async def get_public_config(
     key: str,
-    entity_id: Optional[int] = Query(None)
+    db: DbSession,
+    entity_id: Optional[int] = Query(None),
 ):
-    """
-    Get a public config value (no auth required).
-
-    Used by frontend to get brand settings, colors, etc.
-    Returns value only, not full config object.
-    """
+    """Get a public config value (no auth required)."""
     service = ConfigService(db)
     value = await service.get_value(key, entity_id=entity_id)
     return {"key": key, "value": value}
@@ -256,19 +235,15 @@ async def get_public_config(
 
 @router.get("/public/grouped")
 async def get_public_grouped_configs(
-    entity_id: Optional[int] = Query(None)
+    db: DbSession,
+    entity_id: Optional[int] = Query(None),
 ):
-    """
-    Get public configs grouped by group (no auth required).
-
-    Returns only non-secret configs.
-    """
+    """Get public configs grouped by group (no auth required)."""
     service = ConfigService(db)
     grouped = await service.get_grouped_configs(entity_id)
 
     result = []
     for group_data in grouped:
-        # Filter out secret configs
         public_configs = [
             c for c in group_data["configs"]
             if not c.is_secret
@@ -288,20 +263,11 @@ async def get_public_grouped_configs(
     return result
 
 
-# ========================
-# Admin: Seed Default Configs
-# ========================
-
-
 @router.post("/seed", status_code=status.HTTP_200_OK)
 async def seed_default_configurations(
     db: DbSession,
-    current_user: User = Depends(require_admin)
+    _: User = Depends(require_admin),
 ):
-    """
-    Seed default configuration groups and configs.
-
-    Creates any missing default configs. Idempotent - safe to run multiple times.
-    """
+    """Seed default configuration groups and configs."""
     await seed_default_configs(db)
     return {"message": "Configurations par défaut créées avec succès"}

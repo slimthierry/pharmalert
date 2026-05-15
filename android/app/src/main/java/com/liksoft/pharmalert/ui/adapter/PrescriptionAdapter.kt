@@ -30,11 +30,6 @@ class PrescriptionAdapter : ListAdapter<PrescriptionResponse, PrescriptionAdapte
             binding.tvRoute.text = "Voie: ${item.route}"
             binding.tvDoctor.text = "Dr. ${item.doctorName ?: "—" }"
 
-            val statusColor = when (item.validationStatus) {
-                "validated" -> "#22C55E"
-                "rejected" -> "#EF4444"
-                else -> "#F59E0B"
-            }
             binding.chipStatus.text = when (item.validationStatus) {
                 "validated" -> "Validee"
                 "rejected" -> "Rejetee"

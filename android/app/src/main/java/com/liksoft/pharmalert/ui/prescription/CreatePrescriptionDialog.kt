@@ -108,20 +108,38 @@ class CreatePrescriptionDialog : DialogFragment() {
     }
 
     private fun loadMedications() {
+        binding.tilMedication.isEnabled = false
         lifecycleScope.launch {
             try {
+                android.util.Log.d("CreatePrescriptionDialog", "Fetching medications from API...")
                 val response = SessionManager.api.getMedications(limit = 100)
+                android.util.Log.d("CreatePrescriptionDialog", "Response received: ${response.medications.size} medications")
+
                 medications = response.medications
 
-                val names = medications.map { "${it.name} ${it.dosage ?: ""}" }
-                binding.actvMedication.setAdapter(
-                    ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, names)
-                )
-                binding.actvMedication.setOnItemClickListener { _, _, position, _ ->
-                    selectedMedication = medications[position]
+                if (medications.isEmpty()) {
+                    Toast.makeText(requireContext(), "Aucun medicament trouve. Ajoutez des medicaments d'abord.", Toast.LENGTH_LONG).show()
+                    return@launch
                 }
+
+                val names = medications.map { "${it.name} - ${it.dosage ?: ""}".trim() }
+                android.util.Log.d("CreatePrescriptionDialog", "Adapter items: ${names.take(3)}")
+
+                val adapter = ArrayAdapter(requireContext(), R.layout.item_dropdown, names)
+                binding.actvMedication.setAdapter(adapter)
+                binding.actvMedication.isEnabled = true
+                binding.tilMedication.isEnabled = true
+
+                binding.actvMedication.setOnItemClickListener { _, _, position, _ ->
+                    android.util.Log.d("CreatePrescriptionDialog", "Item clicked at position $position: ${names.getOrNull(position)}")
+                    selectedMedication = medications.getOrNull(position)
+                    binding.tilMedication.error = null
+                }
+
+                android.util.Log.d("CreatePrescriptionDialog", "Medication dropdown ready. Count: ${medications.size}")
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Erreur chargement medicaments", Toast.LENGTH_SHORT).show()
+                android.util.Log.e("CreatePrescriptionDialog", "Failed to load medications", e)
+                Toast.makeText(requireContext(), "Erreur chargement medicaments: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
             }
         }
     }

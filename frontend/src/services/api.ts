@@ -356,10 +356,11 @@ export const settings = {
     }),
 
   updateByKey: (key: string, value: string, entityId?: number) => {
-    const params = entityId ? `?entity_id=${entityId}` : '';
-    return request<import('../types').SystemConfig>(`/settings/by-key/${key}${params}`, {
+    const params = new URLSearchParams();
+    params.set('value', value);
+    if (entityId) params.set('entity_id', String(entityId));
+    return request<import('../types').SystemConfig>(`/settings/by-key/${key}?${params}`, {
       method: 'PUT',
-      body: JSON.stringify(value),
     });
   },
 

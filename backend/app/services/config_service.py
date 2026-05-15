@@ -8,7 +8,7 @@ Supports both global and per-entity configuration.
 import json
 from typing import Optional, Any
 
-from sqlalchemy import select, and_, or_
+from sqlalchemy import select, and_, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.settings import SystemConfig, ConfigGroup
@@ -175,10 +175,10 @@ class ConfigService:
         configs = result.scalars().all()
 
         # Count total
-        count_query = select(SystemConfig)
+        count_query = select(func.count(SystemConfig.id))
         if conditions:
             count_query = count_query.where(and_(*conditions))
-        total = await self.db.scalar(count_query.with_only_columns(SystemConfig.id).func.count())
+        total = await self.db.scalar(count_query)
 
         return list(configs), total or 0
 
