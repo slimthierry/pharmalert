@@ -26,7 +26,13 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480  # 8 hours for hospital shifts
 
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3900"]
+    CORS_ORIGINS: List[str] = [
+    "http://localhost:3900",
+    "http://10.17.1.51:3900",
+    "http://localhost:9600",
+    "capacitor://localhost",
+    "http://localhost",
+]
 
     # Webhooks
     WEBHOOK_URLS: List[str] = []

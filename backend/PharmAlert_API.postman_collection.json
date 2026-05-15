@@ -1,0 +1,480 @@
+{
+  "info": {
+    "name": "PharmAlert API",
+    "description": "API PharmAlert - Backend Odoo Likmed Integration\n\nBase URL: http://localhost:9600/api/v1/\n\nPour iPhone (même réseau): http://10.17.1.51:9600/api/v1/",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://10.0.2.2:9600/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('token', jsonData.access_token);",
+                  "pm.test('Token received', function() {",
+                  "    pm.expect(jsonData.access_token).to.not.be.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@pharmalert.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Me (Current User)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SIH Sync",
+      "item": [
+        {
+          "name": "SIH Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "status"]
+            }
+          }
+        },
+        {
+          "name": "SIH Connect (Test Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sih/connect",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "connect"]
+            }
+          }
+        },
+        {
+          "name": "Sync All (Full)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/sync/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "sync", "all"]
+            }
+          }
+        },
+        {
+          "name": "Sync Patients",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/sync/patients",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "sync", "patients"]
+            }
+          }
+        },
+        {
+          "name": "Sync Drugs",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/sync/drugs",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "sync", "drugs"]
+            }
+          }
+        },
+        {
+          "name": "Sync Orders",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/sync/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "sync", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Sync Allergies",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/sync/allergies",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "sync", "allergies"]
+            }
+          }
+        },
+        {
+          "name": "Browse Patients (Preview)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/patients?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "patients"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Browse Drugs (Preview)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/drugs?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "drugs"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Configure SIH Credentials",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sih/configure",
+              "host": ["{{baseUrl}}"],
+              "path": ["sih", "configure"],
+              "query": [
+                {
+                  "key": "sih_url",
+                  "value": "http://host.docker.internal:4430"
+                },
+                {
+                  "key": "sih_db",
+                  "value": "likmed_db"
+                },
+                {
+                  "key": "sih_username",
+                  "value": "admin@hdl.tg"
+                },
+                {
+                  "key": "sih_password",
+                  "value": "ProDPro2029@"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Get Patients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/?skip=0&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["patients", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medications",
+      "item": [
+        {
+          "name": "Get Medications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications/?skip=0&limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["medications", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Medications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/medications/?search=paracetamol&skip=0&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["medications", ""],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "paracetamol"
+                },
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prescriptions",
+      "item": [
+        {
+          "name": "Get Prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/prescriptions/?skip=0&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["prescriptions", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Prescriptions by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/prescriptions/?status=active&skip=0&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["prescriptions", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "active"
+                },
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Allergies",
+      "item": [
+        {
+          "name": "Get Allergies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/allergies/?skip=0&limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["allergies", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Interactions",
+      "item": [
+        {
+          "name": "Check Interactions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medication_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/interactions/check",
+              "host": ["{{baseUrl}}"],
+              "path": ["interactions", "check"]
+            }
+          }
+        },
+        {
+          "name": "Get Interactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/interactions/?skip=0&limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["interactions", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Entities",
+      "item": [
+        {
+          "name": "Get Entities Brief",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entities/brief",
+              "host": ["{{baseUrl}}"],
+              "path": ["entities", "brief"]
+            }
+          }
+        },
+        {
+          "name": "Get My Entities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/entities/me/entities",
+              "host": ["{{baseUrl}}"],
+              "path": ["entities", "me", "entities"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

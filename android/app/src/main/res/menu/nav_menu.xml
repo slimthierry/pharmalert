@@ -31,6 +31,10 @@
                 android:icon="@drawable/ic_audit"
                 android:title="@string/nav_audit" />
             <item
+                android:id="@+id/nav_server"
+                android:icon="@drawable/ic_settings"
+                android:title="Serveur" />
+            <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_logout"
                 android:title="@string/logout" />

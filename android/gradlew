@@ -1,0 +1,2 @@
+#!/bin/sh
+JAVA_HOME=${JAVA_HOME:-$(/usr/libexec/java_home 2>/dev/null)} exec java -jar "$(dirname "$0")/gradle/wrapper/gradle-wrapper.jar" "$@"

@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.nav_server -> {
+                    ServerConfigDialog.show(supportFragmentManager)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                }
                 R.id.nav_logout -> {
                     tokenStorage.clear()
                     SessionManager.logout()

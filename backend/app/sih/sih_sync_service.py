@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config.database import AsyncSessionLocal
 from app.models.patient_models import Patient
-from app.models.allergy_models import PatientAllergy
+from app.models.allergy_models import PatientAllergy as Allergy
 from app.models.medication_models import Medication
 from app.models.prescription_models import Prescription
 from app.models.entity import Entity
@@ -524,15 +524,12 @@ class SIHSyncService:
         count = 0
 
         try:
-            from datetime import timedelta
-            thirty_days_ago = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-
+            # Sync all orders (no date filter - sync everything)
             offset = 0
             batch_size = 50
 
             while True:
                 orders = self.client.get_orders(
-                    date_from=thirty_days_ago,
                     offset=offset,
                     limit=batch_size
                 )
@@ -599,19 +596,19 @@ class SIHSyncService:
                         notes = order.get('notes', '') or ('\n'.join(instructions) if instructions else None)
 
                         if prescription is None:
+                            mp_id = order.get('medical_person_id')
+                            if isinstance(mp_id, (list, tuple)):
+                                prescribed = mp_id[1] if len(mp_id) > 1 else None
+                            else:
+                                prescribed = None
+
                             prescription = Prescription(
                                 entity_id=self.entity_id,
                                 patient_ipp=patient_ipp or f"SIH-{order.get('patient_id', [[0]])[0]}",
-                                medication_id=None,  # La medication sera résolue plus tard
-                                dosage_value=0.0,
-                                dosage_unit=None,
+                                patient_name=order.get('patient_id', [None, ''])[1] if isinstance(order.get('patient_id'), (list, tuple)) else None,
                                 frequency=frequency,
-                                route=order_lines[0].get('route') if order_lines else None,
-                                start_date=order_date.date() if order_date else date.today(),
-                                end_date=None,
                                 status=prescription_state,
-                                prescribed_by=order.get('medical_person_id', [None])[1] if isinstance(order.get('medical_person_id'), (list, tuple)) else None,
-                                notes=notes,
+                                prescribed_by=prescribed,
                                 sih_reference=str(order['id']),
                                 created_at=datetime.utcnow(),
                                 updated_at=datetime.utcnow()
@@ -705,6 +702,7 @@ class SIHSyncService:
 
                 except Exception as e:
                     logger.warning(f"Error syncing allergy {allergy_data.get('id')}: {e}")
+                    await session.rollback()
                     continue
 
             await session.commit()
