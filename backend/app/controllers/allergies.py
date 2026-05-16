@@ -38,7 +38,7 @@ async def get_allergies(
         db, patient_ipp=patient_ipp, allergen_type=allergen_type, skip=skip, limit=limit
     )
     return AllergyListResponse(
-        allergies=[AllergyResponse.model_validate(a) for a in allergies],
+        items=[AllergyResponse.model_validate(a) for a in allergies],
         total=total,
     )
 

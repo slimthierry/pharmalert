@@ -31,10 +31,10 @@ class MedicationUpdate(BaseModel):
 class MedicationResponse(BaseModel):
     id: int
     name: str
-    dci: str
+    dci: Optional[str] = None
     atc_code: Optional[str] = None
-    form: MedicationForm
-    dosage_unit: str
+    form: Optional[MedicationForm] = None
+    dosage_unit: Optional[str] = None
     manufacturer: Optional[str] = None
     contraindications: List[str] = []
     side_effects: List[str] = []
@@ -44,5 +44,5 @@ class MedicationResponse(BaseModel):
 
 
 class MedicationListResponse(BaseModel):
-    medications: List[MedicationResponse]
+    items: List[MedicationResponse]
     total: int

@@ -41,5 +41,5 @@ class AllergyResponse(BaseModel):
 
 
 class AllergyListResponse(BaseModel):
-    allergies: List[AllergyResponse]
+    items: List[AllergyResponse]
     total: int

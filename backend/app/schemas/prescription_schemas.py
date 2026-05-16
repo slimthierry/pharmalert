@@ -71,5 +71,5 @@ class PrescriptionCreateResponse(BaseModel):
 
 
 class PrescriptionListResponse(BaseModel):
-    prescriptions: List[PrescriptionResponse]
+    items: List[PrescriptionResponse]
     total: int

@@ -1,0 +1,33 @@
+# PharmAlert - Configuration éditeur pour WindSurf / VS Code
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+[*.{dart,py,js,ts,tsx,json,yaml,yml}]
+indent_size = 2
+
+[*.{swift,kt}]
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+
+[Dockerfile]
+indent_size = 4
+
+[*.gradle]
+indent_size = 4
+
+# Pas de règles pour les fichiers générés
+[{pubspec.yaml,package.json}]
+indent_size = 2
+
+# Taille max ligne
+[*.{dart,py,js,ts}]
+max_line_length = 120

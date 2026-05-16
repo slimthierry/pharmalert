@@ -73,7 +73,7 @@ async def get_prescriptions(
             )
         )
 
-    return PrescriptionListResponse(prescriptions=prescription_responses, total=total)
+    return PrescriptionListResponse(items=prescription_responses, total=total)
 
 
 @router.get("/{prescription_id}", response_model=PrescriptionResponse)

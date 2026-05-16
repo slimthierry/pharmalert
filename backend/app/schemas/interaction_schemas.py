@@ -41,7 +41,7 @@ class InteractionResponse(BaseModel):
 
 
 class InteractionListResponse(BaseModel):
-    interactions: List[InteractionResponse]
+    items: List[InteractionResponse]
     total: int
 
 

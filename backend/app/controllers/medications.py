@@ -36,7 +36,7 @@ async def get_medications(
         db, search=search, atc_code=atc_code, skip=skip, limit=limit
     )
     return MedicationListResponse(
-        medications=[MedicationResponse.model_validate(m) for m in medications],
+        items=[MedicationResponse.model_validate(m) for m in medications],
         total=total,
     )
 

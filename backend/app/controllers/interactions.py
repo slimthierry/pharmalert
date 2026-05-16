@@ -59,7 +59,7 @@ async def get_interactions(
             )
         )
 
-    return InteractionListResponse(interactions=responses, total=total)
+    return InteractionListResponse(items=responses, total=total)
 
 
 @router.get("/{interaction_id}", response_model=InteractionResponse)
