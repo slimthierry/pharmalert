@@ -7,9 +7,9 @@ interface LogoProps {
 }
 
 /**
- * Logo pharmALT — Option C : Gélule avec point d'exclamation
- * Alerte + Identité Pharmaceutique + Interaction médicamenteuse
- * Compacte et mémorable
+ * Logo pharmALT — Option D : Caducée Minimaliste
+ * Symbole médical universel + Branding PharmAlert
+ * Compact et élégant
  */
 export default function Logo({ size = 'large', animated = false }: LogoProps) {
   const scaleAnim = useRef(new Animated.Value(0.4)).current;
@@ -22,14 +22,14 @@ export default function Logo({ size = 'large', animated = false }: LogoProps) {
     Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: 1,
-        tension: 60,
+        tension: 55,
         friction: 6,
-        delay: 60,
+        delay: 80,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnim, {
         toValue: 1,
-        duration: 450,
+        duration: 500,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }),
@@ -38,14 +38,14 @@ export default function Logo({ size = 'large', animated = false }: LogoProps) {
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
-          toValue: 1.06,
-          duration: 2600,
+          toValue: 1.05,
+          duration: 2400,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
         Animated.timing(pulseAnim, {
           toValue: 1,
-          duration: 2600,
+          duration: 2400,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
@@ -56,116 +56,176 @@ export default function Logo({ size = 'large', animated = false }: LogoProps) {
   }, [animated]);
 
   const isSmall = size === 'small';
-  // Capsule dimensions — compacte
-  const W = isSmall ? 38 : 72;
-  const H = isSmall ? 20 : 38;
-  const halfW = W / 2;
-  const fontExcl = isSmall ? 11 : 20;
+  const S = isSmall ? 44 : 84;  // circle diameter
+  const R = S / 2;
+  const staffW = isSmall ? 2 : 3.5;
+  const staffH = isSmall ? 30 : 56;
+  const wingW = isSmall ? 9 : 16;
+  const wingH = isSmall ? 6 : 10;
+
+  const animatedStyle = animated
+    ? { transform: [{ scale: scaleAnim }, { scale: pulseAnim }], opacity: opacityAnim }
+    : undefined;
 
   return (
     <View style={styles.wrapper}>
-      {/* Capsule外壳 */}
       <Animated.View
         style={[
-          styles.capsuleOuter,
+          styles.circle,
           {
-            width: W + 6,
-            height: H + 6,
-            borderRadius: (H + 6) / 2,
-            borderTopLeftRadius: isSmall ? 7 : 12,
-            borderBottomLeftRadius: isSmall ? 7 : 12,
-            transform: [
-              { scale: animated ? scaleAnim : 1 },
-              { scale: animated ? pulseAnim : 1 },
-            ],
-            opacity: animated ? opacityAnim : 1,
+            width: S,
+            height: S,
+            borderRadius: R,
           },
+          animatedStyle,
         ]}
       >
-        {/* Capsule body */}
+        {/* Caduceus staff */}
         <View
           style={[
-            styles.capsuleBody,
+            styles.staff,
             {
-              width: W,
-              height: H,
-              borderRadius: H / 2,
-              borderTopLeftRadius: isSmall ? 7 : 12,
-              borderBottomLeftRadius: isSmall ? 7 : 12,
+              width: staffW,
+              height: staffH,
+              borderRadius: staffW / 2,
+              top: isSmall ? 4 : 7,
+            },
+          ]}
+        />
+
+        {/* Left wing */}
+        <View
+          style={[
+            styles.wing,
+            styles.wingLeft,
+            {
+              width: wingW,
+              height: wingH,
+              borderTopLeftRadius: wingW,
+              borderBottomLeftRadius: wingW,
+              top: isSmall ? 11 : 19,
+              left: isSmall ? -wingW + 1 : -wingW + 2,
+              transform: [{ rotate: '15deg' }],
+            },
+          ]}
+        />
+
+        {/* Right wing */}
+        <View
+          style={[
+            styles.wing,
+            styles.wingRight,
+            {
+              width: wingW,
+              height: wingH,
+              borderTopRightRadius: wingW,
+              borderBottomRightRadius: wingW,
+              top: isSmall ? 11 : 19,
+              right: isSmall ? -wingW + 1 : -wingW + 2,
+              transform: [{ rotate: '-15deg' }],
+            },
+          ]}
+        />
+
+        {/* Wing mid lines */}
+        <View
+          style={[
+            styles.wingLine,
+            {
+              width: wingW + 2,
+              height: 1,
+              top: isSmall ? 14 : 24,
+              left: -(wingW / 2) + staffW / 2 + 1,
+              backgroundColor: 'rgba(52,211,153,0.5)',
+            },
+          ]}
+        />
+        <View
+          style={[
+            styles.wingLine,
+            {
+              width: wingW + 2,
+              height: 1,
+              top: isSmall ? 18 : 30,
+              left: -(wingW / 2) + staffW / 2 + 1,
+              backgroundColor: 'rgba(52,211,153,0.5)',
+            },
+          ]}
+        />
+
+        {/* Snake body (arc) — approximated with oval */}
+        <View
+          style={[
+            styles.snake,
+            {
+              width: isSmall ? 12 : 22,
+              height: isSmall ? 8 : 14,
+              borderRadius: isSmall ? 6 : 10,
+              top: isSmall ? staffH - 8 : staffH - 14,
+              left: staffW / 2 - (isSmall ? 6 : 11),
+              borderColor: '#34D399',
+              borderWidth: 1.5,
+              borderBottomWidth: 0,
+            },
+          ]}
+        />
+
+        {/* Snake head */}
+        <View
+          style={[
+            styles.snakeHead,
+            {
+              width: isSmall ? 5 : 8,
+              height: isSmall ? 4 : 7,
+              borderRadius: isSmall ? 2 : 3,
+              top: isSmall ? staffH - 8 : staffH - 13,
+              right: -1,
+              backgroundColor: '#34D399',
+            },
+          ]}
+        />
+
+        {/* Inner ring */}
+        <View
+          style={[
+            styles.innerRing,
+            {
+              width: S - 5,
+              height: S - 5,
+              borderRadius: (S - 5) / 2,
+              borderColor: 'rgba(52, 211, 153, 0.15)',
+            },
+          ]}
+        />
+
+        {/* Verified checkmark badge */}
+        <View
+          style={[
+            styles.checkBadge,
+            {
+              right: isSmall ? -4 : -7,
+              bottom: isSmall ? -4 : -7,
+              width: isSmall ? 16 : 28,
+              height: isSmall ? 16 : 28,
+              borderRadius: isSmall ? 8 : 14,
             },
           ]}
         >
-          {/* Half 1 — green "pharm" */}
-          <View
-            style={[
-              styles.capsuleHalf,
-              styles.halfLeft,
-              {
-                width: halfW,
-                height: H,
-                borderTopLeftRadius: isSmall ? 7 : 12,
-                borderBottomLeftRadius: isSmall ? 7 : 12,
-              },
-            ]}
-          />
-
-          {/* Half 2 — blue "ALT" */}
-          <View
-            style={[
-              styles.capsuleHalf,
-              styles.halfRight,
-              {
-                width: halfW,
-                height: H,
-                borderTopRightRadius: H / 2,
-                borderBottomRightRadius: H / 2,
-              },
-            ]}
-          />
-
-          {/* Exclamation mark — center overlay */}
-          <View style={[styles.exclWrapper, { height: H }]}>
-            <Text
-              style={[
-                styles.exclText,
-                {
-                  fontSize: fontExcl,
-                  lineHeight: fontExcl * 1.1,
-                  top: isSmall ? 1 : 2,
-                },
-              ]}
-            >
-              !
-            </Text>
-          </View>
-
-          {/* Capsule shine */}
-          <View
-            style={[
-              styles.capsuleShine,
-              {
-                width: isSmall ? 7 : 12,
-                height: isSmall ? 3 : 5,
-                top: isSmall ? 3 : 6,
-                left: isSmall ? 9 : 16,
-                borderRadius: (isSmall ? 3 : 5) / 2,
-              },
-            ]}
-          />
+          <Text style={[styles.checkText, { fontSize: isSmall ? 8 : 14 }]}>✓</Text>
         </View>
       </Animated.View>
 
       {/* Brand text */}
-      <View style={[styles.brandRow, { marginTop: isSmall ? 4 : 7 }]}>
+      <View style={[styles.brandRow, { marginTop: isSmall ? 5 : 8 }]}>
         <Text
           style={[
             styles.brandPharm,
-            { fontSize: isSmall ? 11 : 18, marginRight: isSmall ? 1 : 2 },
+            { fontSize: isSmall ? 12 : 20, marginRight: isSmall ? 1 : 2 },
           ]}
         >
           pharm
         </Text>
-        <Text style={[styles.brandAlt, { fontSize: isSmall ? 11 : 18 }]}>ALT</Text>
+        <Text style={[styles.brandAlt, { fontSize: isSmall ? 12 : 20 }]}>ALT</Text>
       </View>
     </View>
   );
@@ -175,47 +235,57 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
   },
-  capsuleOuter: {
+  circle: {
     position: 'relative',
-    backgroundColor: 'rgba(52, 211, 153, 0.08)',
-    justifyContent: 'center',
+    backgroundColor: '#0F172A',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    overflow: 'visible',
     shadowColor: '#34D399',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
   },
-  capsuleBody: {
-    position: 'relative',
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  capsuleHalf: {},
-  halfLeft: {
+  staff: {
+    position: 'absolute',
     backgroundColor: '#34D399',
   },
-  halfRight: {
-    backgroundColor: '#60A5FA',
-  },
-  exclWrapper: {
+  wing: {
     position: 'absolute',
-    left: 0,
-    right: 0,
+    backgroundColor: 'rgba(52, 211, 153, 0.6)',
+  },
+  wingLeft: {},
+  wingRight: {},
+  wingLine: {
+    position: 'absolute',
+  },
+  snake: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+  },
+  snakeHead: {
+    position: 'absolute',
+  },
+  innerRing: {
+    position: 'absolute',
+    borderWidth: 1,
+  },
+  checkBadge: {
+    position: 'absolute',
+    backgroundColor: '#10B981',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 2,
+    borderWidth: 2,
+    borderColor: '#0F172A',
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  exclText: {
+  checkText: {
     color: '#fff',
-    fontWeight: '900',
-    textShadowColor: 'rgba(0,0,0,0.25)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  capsuleShine: {
-    position: 'absolute',
-    backgroundColor: 'rgba(255,255,255,0.30)',
-    zIndex: 3,
+    fontWeight: '700',
   },
   brandRow: {
     flexDirection: 'row',

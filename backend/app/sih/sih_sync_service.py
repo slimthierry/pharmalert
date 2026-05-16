@@ -692,7 +692,7 @@ class SIHSyncService:
                         allergy = Allergy(
                             entity_id=self.entity_id,
                             patient_id=patient.id,
-                            allergen_type='medicament',
+                            allergen_type='MEDICATION',
                             allergen_name=allergy_name,
                             severity='major',
                             reaction_type=reaction_val,

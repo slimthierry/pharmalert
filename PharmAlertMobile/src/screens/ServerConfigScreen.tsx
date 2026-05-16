@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { api, getBaseUrl } from '../services/api';
+import { getBaseUrl } from '../services/api';
 
 const DEFAULT_URL_IOS = 'http://localhost:9600/api/v1';
 const DEFAULT_URL_ANDROID = 'http://10.0.2.2:9600/api/v1';
@@ -66,7 +66,7 @@ export default function ServerConfigScreen({ navigation }: { navigation: { goBac
         />
 
         <Text style={styles.hint}>
-          iPhone (externe): https://8ac5f490a17eba37-102-64-167-178.serveousercontent.com/api/v1{'\n'}
+          iPhone (externe): https://9f6210f6a36df0f0-102-64-167-178.serveousercontent.com/api/v1{'\n'}
           Émulateur Android: http://10.0.2.2:9600/api/v1{'\n'}
           Web: http://localhost:9600/api/v1
         </Text>

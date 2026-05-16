@@ -96,7 +96,7 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: theme.dark ? '#0F172A' : '#1E40AF' }]}
+      style={[styles.container, { flex: 1, backgroundColor: theme.dark ? '#0F172A' : '#1E40AF' }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Animated blobs */}

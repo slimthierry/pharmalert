@@ -79,3 +79,8 @@ services:
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  likmed-dev_default:
+    external: true
+    name: likmed-dev_default

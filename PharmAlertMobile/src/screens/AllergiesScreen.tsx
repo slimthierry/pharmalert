@@ -64,7 +64,7 @@ export default function AllergiesScreen() {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { flex: 1, backgroundColor: theme.colors.background }]}>
       {/* ── Header ── */}
       <View style={[styles.screenHeader, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerTop}>
@@ -91,7 +91,7 @@ export default function AllergiesScreen() {
             {loading ? 'Chargement...' : 'Aucune allergie'}
           </Text>
         }
-        contentContainerStyle={{ padding: 16 }}
+        contentContainerStyle={{ flexGrow: 1, padding: 16 }}
       />
     </View>
   );
