@@ -686,13 +686,16 @@ class SIHSyncService:
                     existing_allergy = existing.scalar_one_or_none()
 
                     if existing_allergy is None:
-                        allergy = Allergy(
+                        VALID_REACTION_TYPES = {'RASH', 'ANAPHYLAXIS', 'NAUSEA', 'OTHER'}
+                    note_val = allergy_data.get('note') or ''
+                    reaction_val = note_val.upper() if note_val.upper() in VALID_REACTION_TYPES else 'OTHER'
+                    allergy = Allergy(
                             entity_id=self.entity_id,
                             patient_id=patient.id,
                             allergen_type='medicament',
                             allergen_name=allergy_name,
                             severity='major',
-                            reaction_type=allergy_data.get('note') or 'OTHER',
+                            reaction_type=reaction_val,
                             sih_reference=str(allergy_data['id']),
                             created_at=datetime.utcnow(),
                             updated_at=datetime.utcnow()
