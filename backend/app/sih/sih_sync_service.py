@@ -687,9 +687,9 @@ class SIHSyncService:
 
                     if existing_allergy is None:
                         VALID_REACTION_TYPES = {'RASH', 'ANAPHYLAXIS', 'NAUSEA', 'OTHER'}
-                    note_val = allergy_data.get('note') or ''
-                    reaction_val = note_val.upper() if note_val.upper() in VALID_REACTION_TYPES else 'OTHER'
-                    allergy = Allergy(
+                        note_val = allergy_data.get('note') or ''
+                        reaction_val = note_val.upper() if note_val.upper() in VALID_REACTION_TYPES else 'OTHER'
+                        allergy = Allergy(
                             entity_id=self.entity_id,
                             patient_id=patient.id,
                             allergen_type='medicament',

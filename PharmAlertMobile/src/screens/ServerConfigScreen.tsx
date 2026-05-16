@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,12 @@ const DEFAULT_URL_IOS = 'http://localhost:9600/api/v1';
 const DEFAULT_URL_ANDROID = 'http://10.0.2.2:9600/api/v1';
 
 export default function ServerConfigScreen({ navigation }: { navigation: { goBack: () => void } }) {
-  const [url, setUrl] = useState(getBaseUrl());
+  const [url, setUrl] = useState('');
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    getBaseUrl().then(setUrl);
+  }, []);
 
   const handleSave = async () => {
     if (!url.trim()) {

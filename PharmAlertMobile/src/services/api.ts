@@ -16,15 +16,17 @@ import type {
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 // L'URL est configurable — par défaut backend Docker
-// Ngrok/Serveo tunnel pour accès externe
-const DEFAULT_BASE_URL = 'http://192.168.1.74:9600/api/v1';
+// Utilise SecureStore pour conserver le choix de l'utilisateur
+const DEFAULT_BASE_URL = 'https://8ac5f490a17eba37-102-64-167-178.serveousercontent.com/api/v1';
 
 const KEY_BASE_URL = 'pharmalert_base_url';
 const KEY_TOKEN = 'pharmalert_token';
 
-export function getBaseUrl(): string {
-  // Toujours utiliser DEFAULT_BASE_URL pour l'instant
-  // (le reset au boot dans api.ts efface le cache)
+export async function getBaseUrl(): Promise<string> {
+  try {
+    const stored = await SecureStore.getItemAsync(KEY_BASE_URL);
+    if (stored) return stored;
+  } catch { /* ignore */ }
   return DEFAULT_BASE_URL;
 }
 
@@ -76,7 +78,7 @@ async function request<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const token = await getToken();
-  const baseUrl = getBaseUrl();
+  const baseUrl = await getBaseUrl();
   const url = `${baseUrl}${path}`;
   console.log('🌐 REQUEST:', options.method || 'GET', url);
 

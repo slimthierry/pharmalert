@@ -42,7 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     console.log('🔐 LOGIN: Tentative pour', email);
-    console.log('🔐 LOGIN: URL backend:', getBaseUrl());
+    const baseUrl = await getBaseUrl();
+    console.log('🔐 LOGIN: URL backend:', baseUrl);
 
     let res: TokenResponse;
     try {
