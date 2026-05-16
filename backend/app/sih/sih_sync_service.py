@@ -692,7 +692,7 @@ class SIHSyncService:
                             allergen_type='medicament',
                             allergen_name=allergy_name,
                             severity='major',
-                            reaction_type=allergy_data.get('note', ''),
+                            reaction_type=allergy_data.get('note') or 'OTHER',
                             sih_reference=str(allergy_data['id']),
                             created_at=datetime.utcnow(),
                             updated_at=datetime.utcnow()
