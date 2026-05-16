@@ -20,6 +20,7 @@ _sync_task: asyncio.Task | None = None
 SIH_SERVICE: "SIHSyncService | None" = None  # type: ignore
 
 async def start_sih_scheduler() -> None:
+    print("[SCHEDULER] Creating task...")
     """
     Démarre le sync SIH en arrière-plan.
     - Sync immédiate au démarrage
@@ -106,8 +107,8 @@ async def lifespan(app: FastAPI):
     # ── Démarrer le scheduler SIH en arrière-plan ──
     print(f"[LIFESPAN] Starting scheduler... SIH_URL={settings.SIH_URL}")
     global _sync_task
-    _sync_task = asyncio.create_task(start_sih_scheduler())
-    print(f"[LIFESPAN] Scheduler task created: {_sync_task}")
+    _sync_task = asyncio.ensure_future(start_sih_scheduler())
+    print(f"[LIFESPER] Scheduler task: {_sync_task}")
 
     yield  # ← l'app tourne ici
 

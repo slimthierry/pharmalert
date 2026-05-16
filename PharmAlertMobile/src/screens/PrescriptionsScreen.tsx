@@ -13,7 +13,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function PrescriptionsScreen() {
-  const { theme, toggleTheme, themeMode } = useTheme();
+  const { theme } = useTheme();
   const [items, setItems] = useState<Prescription[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -36,7 +36,6 @@ export default function PrescriptionsScreen() {
   useEffect(() => { load(filter); }, [filter]);
 
   const onRefresh = () => { setRefreshing(true); load(filter); };
-  const themeIcon = themeMode === 'dark' ? '🌙' : themeMode === 'light' ? '☀️' : '💻';
 
   const filters: Array<{ key: string; label: string }> = [
     { key: 'active', label: 'Actives' },
@@ -80,9 +79,6 @@ export default function PrescriptionsScreen() {
       <View style={[styles.screenHeader, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerTop}>
           <Logo size="small" />
-          <TouchableOpacity style={styles.themeBtn} onPress={toggleTheme}>
-            <Text style={styles.themeBtnText}>{themeIcon}</Text>
-          </TouchableOpacity>
         </View>
         <Text style={styles.screenTitle}>Ordonnances</Text>
         <Text style={styles.screenSubtitle}>{items.length} résultats</Text>
@@ -130,8 +126,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   screenHeader: { padding: 20, paddingTop: 56, paddingBottom: 16 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  themeBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  themeBtnText: { fontSize: 20 },
   screenTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   screenSubtitle: { fontSize: 12, color: '#93C5FD', marginTop: 2 },
   filterRow: { flexDirection: 'row', padding: 12, gap: 8 },

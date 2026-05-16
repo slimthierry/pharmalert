@@ -77,8 +77,10 @@ async function request<T>(
 ): Promise<T> {
   const token = await getToken();
   const baseUrl = getBaseUrl();
+  const url = `${baseUrl}${path}`;
+  console.log('🌐 REQUEST:', options.method || 'GET', url);
 
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await fetch(url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -87,9 +89,14 @@ async function request<T>(
     },
   });
 
+  console.log('🌐 RESPONSE:', response.status, url);
+
   if (!response.ok) {
-    const data = await response.json().catch(() => ({ detail: 'Erreur inconnue' }));
-    throw new ApiError(response.status, data.detail || 'Erreur serveur');
+    const text = await response.text();
+    console.error('❌ REQUEST ERROR:', response.status, text.substring(0, 200));
+    let data = { detail: 'Erreur serveur' };
+    try { data = JSON.parse(text || '{}'); } catch { /* ignore */ }
+    throw new ApiError(response.status, data.detail || `HTTP ${response.status}`);
   }
 
   if (response.status === 204) return undefined as T;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, RefreshControl, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, RefreshControl, StyleSheet, TextInput } from 'react-native';
 import { api } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import type { Medication } from '../types';
 
 export default function MedicationsScreen() {
-  const { theme, toggleTheme, themeMode } = useTheme();
+  const { theme } = useTheme();
   const [items, setItems] = useState<Medication[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -38,7 +38,6 @@ export default function MedicationsScreen() {
   }, [search]);
 
   const onRefresh = () => { setRefreshing(true); load(search || undefined); };
-  const themeIcon = themeMode === 'dark' ? '🌙' : themeMode === 'light' ? '☀️' : '💻';
 
   const renderItem = ({ item }: { item: Medication }) => (
     <View style={[styles.card, { backgroundColor: theme.colors.card }]}>
@@ -82,9 +81,6 @@ export default function MedicationsScreen() {
       <View style={[styles.screenHeader, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerTop}>
           <Logo size="small" />
-          <TouchableOpacity style={styles.themeBtn} onPress={toggleTheme}>
-            <Text style={styles.themeBtnText}>{themeIcon}</Text>
-          </TouchableOpacity>
         </View>
         <Text style={styles.screenTitle}>Médicaments</Text>
         <Text style={styles.screenSubtitle}>{items.length} résultats</Text>
@@ -129,8 +125,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   screenHeader: { padding: 20, paddingTop: 56, paddingBottom: 16 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  themeBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  themeBtnText: { fontSize: 20 },
+
   screenTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   screenSubtitle: { fontSize: 12, color: '#93C5FD', marginTop: 2 },
   searchRow: { padding: 12 },

@@ -20,7 +20,7 @@ const SEVERITY_LABELS: Record<string, string> = {
 };
 
 export default function InteractionsScreen() {
-  const { theme, toggleTheme, themeMode } = useTheme();
+  const { theme } = useTheme();
   const [items, setItems] = useState<Interaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -42,7 +42,6 @@ export default function InteractionsScreen() {
 
   useEffect(() => { load(); }, []);
   const onRefresh = () => { setRefreshing(true); load(); };
-  const themeIcon = themeMode === 'dark' ? '🌙' : themeMode === 'light' ? '☀️' : '💻';
 
   const toggleSelect = (id: number) => {
     setSelectedIds((prev) =>
@@ -97,9 +96,6 @@ export default function InteractionsScreen() {
       <View style={[styles.screenHeader, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerTop}>
           <Logo size="small" />
-          <TouchableOpacity style={styles.themeBtn} onPress={toggleTheme}>
-            <Text style={styles.themeBtnText}>{themeIcon}</Text>
-          </TouchableOpacity>
         </View>
         <Text style={styles.screenTitle}>Interactions</Text>
         <Text style={styles.screenSubtitle}>{items.length} interactions connues</Text>
@@ -142,8 +138,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   screenHeader: { padding: 20, paddingTop: 56, paddingBottom: 16 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  themeBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  themeBtnText: { fontSize: 20 },
   screenTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   screenSubtitle: { fontSize: 12, color: '#93C5FD', marginTop: 2 },
   selectionBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 },

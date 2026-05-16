@@ -20,7 +20,7 @@ const ALLERGEN_ICONS: Record<string, string> = {
 };
 
 export default function AllergiesScreen() {
-  const { theme, toggleTheme, themeMode } = useTheme();
+  const { theme } = useTheme();
   const [items, setItems] = useState<PatientAllergy[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -41,7 +41,6 @@ export default function AllergiesScreen() {
 
   useEffect(() => { load(); }, []);
   const onRefresh = () => { setRefreshing(true); load(); };
-  const themeIcon = themeMode === 'dark' ? '🌙' : themeMode === 'light' ? '☀️' : '💻';
 
   const renderItem = ({ item }: { item: PatientAllergy }) => (
     <View style={[styles.card, { backgroundColor: theme.colors.card }]}>
@@ -70,9 +69,6 @@ export default function AllergiesScreen() {
       <View style={[styles.screenHeader, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerTop}>
           <Logo size="small" />
-          <TouchableOpacity style={styles.themeBtn} onPress={toggleTheme}>
-            <Text style={styles.themeBtnText}>{themeIcon}</Text>
-          </TouchableOpacity>
         </View>
         <Text style={styles.screenTitle}>Allergies</Text>
         <Text style={styles.screenSubtitle}>{items.length} allergies déclarées</Text>
@@ -105,8 +101,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   screenHeader: { padding: 20, paddingTop: 56, paddingBottom: 16 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  themeBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  themeBtnText: { fontSize: 20 },
   screenTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   screenSubtitle: { fontSize: 12, color: '#93C5FD', marginTop: 2 },
   errorBanner: { backgroundColor: '#FEE2E2', padding: 10, marginHorizontal: 16, marginTop: 8, borderRadius: 8 },

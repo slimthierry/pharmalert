@@ -7,6 +7,7 @@ from app.schemas.auth_schemas import LoginRequest, PasswordChangeRequest, TokenR
 from app.schemas.user_schemas import UserCreate, UserListResponse, UserResponse
 from app.services.auth_service import (
     authenticate_user,
+    authenticate_user_via_sih,
     create_user,
     get_user_by_email,
     list_users,
@@ -18,7 +19,16 @@ router = APIRouter()
 
 @router.post("/login", response_model=TokenResponse)
 async def login(login_data: LoginRequest, db: DbSession):
-    """Authenticate and receive an access token."""
+    """
+    Authenticate and receive an access token.
+    Tries Odoo SIH authentication first, then falls back to local PharmAlert auth.
+    """
+    # Try SIH (Odoo) authentication first
+    token_response = await authenticate_user_via_sih(db, login_data)
+    if token_response:
+        return token_response
+
+    # Fall back to local PharmAlert auth (admin account, etc.)
     token_response = await authenticate_user(db, login_data)
     if not token_response:
         raise HTTPException(

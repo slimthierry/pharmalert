@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { api } from '../services/api';
+import { api, getBaseUrl } from '../services/api';
 import type { User, TokenResponse } from '../types';
 
 interface AuthContextType {
@@ -41,13 +41,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const res = await api.login(email, password);
+    console.log('🔐 LOGIN: Tentative pour', email);
+    console.log('🔐 LOGIN: URL backend:', getBaseUrl());
+
+    let res: TokenResponse;
+    try {
+      res = await api.login(email, password);
+      console.log('✅ LOGIN: Token reçu', res.access_token?.substring(0, 20) + '...');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error('❌ LOGIN: Erreur:', msg);
+      throw new Error(msg);
+    }
+
     await SecureStore.setItemAsync('pharmalert_token', res.access_token);
     await SecureStore.setItemAsync('pharmalert_user_name', res.name);
     await SecureStore.setItemAsync('pharmalert_user_role', res.role);
     setTokenState(res.access_token);
-    const me = await api.me();
-    setUser(me);
+
+    try {
+      const me = await api.me();
+      console.log('✅ LOGIN: Utilisateur chargé:', me.name);
+      setUser(me);
+    } catch (err: unknown) {
+      console.error('❌ LOGIN: Erreur me():', err);
+    }
   }, []);
 
   const logout = useCallback(async () => {

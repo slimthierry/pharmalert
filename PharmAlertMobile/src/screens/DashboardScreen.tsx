@@ -127,7 +127,7 @@ function EmptyState({ icon, message }: { icon: string; message: string }) {
 
 export default function DashboardScreen() {
   const { user, logout } = useAuth();
-  const { theme, themeMode, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation<any>();
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [sihStatus, setSihStatus] = useState<SIHStatus | null>(null);
@@ -156,8 +156,6 @@ export default function DashboardScreen() {
 
   const onRefresh = () => { setRefreshing(true); load(); };
 
-  const themeIcon = themeMode === 'dark' ? '🌙' : themeMode === 'light' ? '☀️' : '💻';
-
   if (loading) {
     return (
       <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
@@ -173,9 +171,6 @@ export default function DashboardScreen() {
       <View style={[styles.header, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerTop}>
           <Logo size="small" />
-          <TouchableOpacity style={styles.themeBtn} onPress={toggleTheme}>
-            <Text style={styles.themeBtnText}>{themeIcon}</Text>
-          </TouchableOpacity>
         </View>
         <Text style={styles.greeting}>Bonjour, {user?.name || 'Utilisateur'}</Text>
         <Text style={styles.role}>{(user?.role || 'medecin').charAt(0).toUpperCase() + (user?.role || 'medecin').slice(1)}</Text>
@@ -305,8 +300,6 @@ const styles = StyleSheet.create({
   loadingText: { fontSize: 16, marginTop: 16 },
   header: { padding: 20, paddingTop: 56, paddingBottom: 24 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  themeBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  themeBtnText: { fontSize: 20 },
   greeting: { fontSize: 24, fontWeight: '800', color: '#fff' },
   role: { fontSize: 14, color: '#93C5FD', marginTop: 2, fontWeight: '600' },
   date: { fontSize: 12, color: '#64748B', marginTop: 8, textTransform: 'capitalize' },
