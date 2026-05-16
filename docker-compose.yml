@@ -46,6 +46,15 @@ services:
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: pharmalert-secret-key-change-in-production
       CORS_ORIGINS: '["http://localhost:3900"]'
+      SIH_URL: http://172.18.0.6:8069
+      SIH_DB: likmed_db
+      SIH_USERNAME: admin@hdl.tg
+      SIH_PASSWORD: ProDPro2029@
+    extra_hosts:
+      - "likmed-dev-web-1:172.18.0.6"
+    networks:
+      - default
+      - likmed-dev_default
     depends_on:
       postgres:
         condition: service_healthy

@@ -66,7 +66,7 @@ export default function ServerConfigScreen({ navigation }: { navigation: { goBac
         />
 
         <Text style={styles.hint}>
-          iPhone (même réseau): https://fe74ee1e328e711c-102-64-167-178.serveousercontent.com/api/v1{'\n'}
+          iPhone (externe): https://8ac5f490a17eba37-102-64-167-178.serveousercontent.com/api/v1{'\n'}
           Émulateur Android: http://10.0.2.2:9600/api/v1{'\n'}
           Web: http://localhost:9600/api/v1
         </Text>
