@@ -7,12 +7,11 @@ interface LogoProps {
 }
 
 /**
- * Logo pharmALT — Option D : Caducée Minimaliste
- * Symbole médical universel + Branding PharmAlert
- * Compact et élégant
+ * Logo pharmALT — Gélule ouverte + branding
+ * Design clean, sans fond noir — vert & bleu
  */
 export default function Logo({ size = 'large', animated = false }: LogoProps) {
-  const scaleAnim = useRef(new Animated.Value(0.4)).current;
+  const scaleAnim = useRef(new Animated.Value(0.3)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -22,14 +21,14 @@ export default function Logo({ size = 'large', animated = false }: LogoProps) {
     Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: 1,
-        tension: 55,
+        tension: 50,
         friction: 6,
-        delay: 80,
+        delay: 60,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnim, {
         toValue: 1,
-        duration: 500,
+        duration: 600,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }),
@@ -38,14 +37,14 @@ export default function Logo({ size = 'large', animated = false }: LogoProps) {
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 2400,
+          toValue: 1.07,
+          duration: 2600,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
         Animated.timing(pulseAnim, {
           toValue: 1,
-          duration: 2400,
+          duration: 2600,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
@@ -56,176 +55,155 @@ export default function Logo({ size = 'large', animated = false }: LogoProps) {
   }, [animated]);
 
   const isSmall = size === 'small';
-  const S = isSmall ? 44 : 84;  // circle diameter
-  const R = S / 2;
-  const staffW = isSmall ? 2 : 3.5;
-  const staffH = isSmall ? 30 : 56;
-  const wingW = isSmall ? 9 : 16;
-  const wingH = isSmall ? 6 : 10;
+  const capsuleW = isSmall ? 50 : 96;
+  const capsuleH = isSmall ? 26 : 48;
+  const halfW = capsuleW / 2;
+  const fontBrand = isSmall ? 13 : 22;
+  const badgeSize = isSmall ? 16 : 28;
+  const badgeFont = isSmall ? 8 : 14;
+  const crossSize = isSmall ? 9 : 16;
+  const crossThick = isSmall ? 2.5 : 4;
 
-  const animatedStyle = animated
-    ? { transform: [{ scale: scaleAnim }, { scale: pulseAnim }], opacity: opacityAnim }
+  const animStyle = animated
+    ? { opacity: opacityAnim, transform: [{ scale: Animated.multiply(scaleAnim, pulseAnim) }] }
     : undefined;
 
   return (
     <View style={styles.wrapper}>
-      <Animated.View
-        style={[
-          styles.circle,
-          {
-            width: S,
-            height: S,
-            borderRadius: R,
-          },
-          animatedStyle,
-        ]}
-      >
-        {/* Caduceus staff */}
+      <Animated.View style={[styles.capsuleWrapper, animStyle]}>
+        {/* Glow behind capsule */}
         <View
           style={[
-            styles.staff,
+            styles.glow,
             {
-              width: staffW,
-              height: staffH,
-              borderRadius: staffW / 2,
-              top: isSmall ? 4 : 7,
+              width: capsuleW + 12,
+              height: capsuleH + 12,
+              borderRadius: (capsuleH + 12) / 2,
             },
           ]}
         />
 
-        {/* Left wing */}
+        {/* Capsule body */}
         <View
           style={[
-            styles.wing,
-            styles.wingLeft,
+            styles.capsule,
             {
-              width: wingW,
-              height: wingH,
-              borderTopLeftRadius: wingW,
-              borderBottomLeftRadius: wingW,
-              top: isSmall ? 11 : 19,
-              left: isSmall ? -wingW + 1 : -wingW + 2,
-              transform: [{ rotate: '15deg' }],
-            },
-          ]}
-        />
-
-        {/* Right wing */}
-        <View
-          style={[
-            styles.wing,
-            styles.wingRight,
-            {
-              width: wingW,
-              height: wingH,
-              borderTopRightRadius: wingW,
-              borderBottomRightRadius: wingW,
-              top: isSmall ? 11 : 19,
-              right: isSmall ? -wingW + 1 : -wingW + 2,
-              transform: [{ rotate: '-15deg' }],
-            },
-          ]}
-        />
-
-        {/* Wing mid lines */}
-        <View
-          style={[
-            styles.wingLine,
-            {
-              width: wingW + 2,
-              height: 1,
-              top: isSmall ? 14 : 24,
-              left: -(wingW / 2) + staffW / 2 + 1,
-              backgroundColor: 'rgba(52,211,153,0.5)',
-            },
-          ]}
-        />
-        <View
-          style={[
-            styles.wingLine,
-            {
-              width: wingW + 2,
-              height: 1,
-              top: isSmall ? 18 : 30,
-              left: -(wingW / 2) + staffW / 2 + 1,
-              backgroundColor: 'rgba(52,211,153,0.5)',
-            },
-          ]}
-        />
-
-        {/* Snake body (arc) — approximated with oval */}
-        <View
-          style={[
-            styles.snake,
-            {
-              width: isSmall ? 12 : 22,
-              height: isSmall ? 8 : 14,
-              borderRadius: isSmall ? 6 : 10,
-              top: isSmall ? staffH - 8 : staffH - 14,
-              left: staffW / 2 - (isSmall ? 6 : 11),
-              borderColor: '#34D399',
-              borderWidth: 1.5,
-              borderBottomWidth: 0,
-            },
-          ]}
-        />
-
-        {/* Snake head */}
-        <View
-          style={[
-            styles.snakeHead,
-            {
-              width: isSmall ? 5 : 8,
-              height: isSmall ? 4 : 7,
-              borderRadius: isSmall ? 2 : 3,
-              top: isSmall ? staffH - 8 : staffH - 13,
-              right: -1,
-              backgroundColor: '#34D399',
-            },
-          ]}
-        />
-
-        {/* Inner ring */}
-        <View
-          style={[
-            styles.innerRing,
-            {
-              width: S - 5,
-              height: S - 5,
-              borderRadius: (S - 5) / 2,
-              borderColor: 'rgba(52, 211, 153, 0.15)',
-            },
-          ]}
-        />
-
-        {/* Verified checkmark badge */}
-        <View
-          style={[
-            styles.checkBadge,
-            {
-              right: isSmall ? -4 : -7,
-              bottom: isSmall ? -4 : -7,
-              width: isSmall ? 16 : 28,
-              height: isSmall ? 16 : 28,
-              borderRadius: isSmall ? 8 : 14,
+              width: capsuleW,
+              height: capsuleH,
+              borderRadius: capsuleH / 2,
             },
           ]}
         >
-          <Text style={[styles.checkText, { fontSize: isSmall ? 8 : 14 }]}>✓</Text>
+          {/* Left half — green "pharm" */}
+          <View
+            style={[
+              styles.half,
+              styles.halfLeft,
+              {
+                width: halfW,
+                height: capsuleH,
+                borderTopLeftRadius: capsuleH / 2,
+                borderBottomLeftRadius: capsuleH / 2,
+              },
+            ]}
+          />
+
+          {/* Right half — blue "ALT" */}
+          <View
+            style={[
+              styles.half,
+              styles.halfRight,
+              {
+                width: halfW,
+                height: capsuleH,
+                borderTopRightRadius: capsuleH / 2,
+                borderBottomRightRadius: capsuleH / 2,
+              },
+            ]}
+          />
+
+          {/* Divider line */}
+          <View style={[styles.divider, { height: capsuleH * 0.65 }]} />
+
+          {/* Shine */}
+          <View
+            style={[
+              styles.shine,
+              {
+                width: capsuleW * 0.3,
+                height: capsuleH * 0.25,
+                top: capsuleH * 0.15,
+                left: capsuleW * 0.15,
+                borderRadius: capsuleH * 0.12,
+              },
+            ]}
+          />
+
+          {/* Exclamation mark */}
+          <View style={[styles.exclWrapper, { height: capsuleH }]}>
+            <Text
+              style={[
+                styles.excl,
+                {
+                  fontSize: isSmall ? 13 : 24,
+                  lineHeight: (isSmall ? 13 : 24) * 1.05,
+                },
+              ]}
+            >
+              !
+            </Text>
+          </View>
+        </View>
+
+        {/* Medical cross — top right */}
+        <View
+          style={[
+            styles.cross,
+            { top: -crossSize * 0.35, right: -crossSize * 0.35 },
+          ]}
+        >
+          <View
+            style={[
+              styles.crossH,
+              { width: crossSize, height: crossThick, borderRadius: crossThick / 2 },
+            ]}
+          />
+          <View
+            style={[
+              styles.crossV,
+              { width: crossThick, height: crossSize, borderRadius: crossThick / 2 },
+            ]}
+          />
+        </View>
+
+        {/* Verified badge — bottom right */}
+        <View
+          style={[
+            styles.badge,
+            {
+              width: badgeSize,
+              height: badgeSize,
+              borderRadius: badgeSize / 2,
+              right: -badgeSize * 0.3,
+              bottom: -badgeSize * 0.3,
+            },
+          ]}
+        >
+          <Text style={[styles.badgeText, { fontSize: badgeFont }]}>✓</Text>
         </View>
       </Animated.View>
 
-      {/* Brand text */}
-      <View style={[styles.brandRow, { marginTop: isSmall ? 5 : 8 }]}>
+      {/* Brand name */}
+      <View style={[styles.brandRow, { marginTop: isSmall ? 8 : 12 }]}>
         <Text
           style={[
             styles.brandPharm,
-            { fontSize: isSmall ? 12 : 20, marginRight: isSmall ? 1 : 2 },
+            { fontSize: fontBrand, marginRight: isSmall ? 2 : 3 },
           ]}
         >
           pharm
         </Text>
-        <Text style={[styles.brandAlt, { fontSize: isSmall ? 12 : 20 }]}>ALT</Text>
+        <Text style={[styles.brandAlt, { fontSize: fontBrand }]}>ALT</Text>
       </View>
     </View>
   );
@@ -235,55 +213,86 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
   },
-  circle: {
+  capsuleWrapper: {
     position: 'relative',
-    backgroundColor: '#0F172A',
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    overflow: 'visible',
+    justifyContent: 'center',
+  },
+  glow: {
+    position: 'absolute',
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
     shadowColor: '#34D399',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
-    shadowRadius: 10,
+    shadowRadius: 16,
   },
-  staff: {
+  capsule: {
+    flexDirection: 'row',
+    overflow: 'hidden',
+    borderWidth: 0,
+    elevation: 0,
+  },
+  half: {},
+  halfLeft: {
+    backgroundColor: '#34D399',
+  },
+  halfRight: {
+    backgroundColor: '#60A5FA',
+  },
+  divider: {
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -0.75,
+    width: 1.5,
+    top: '17.5%',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 1,
+  },
+  shine: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255,255,255,0.25)',
+  },
+  exclWrapper: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  excl: {
+    color: '#fff',
+    fontWeight: '900',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  cross: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  crossH: {
     position: 'absolute',
     backgroundColor: '#34D399',
   },
-  wing: {
+  crossV: {
     position: 'absolute',
-    backgroundColor: 'rgba(52, 211, 153, 0.6)',
+    backgroundColor: '#34D399',
   },
-  wingLeft: {},
-  wingRight: {},
-  wingLine: {
-    position: 'absolute',
-  },
-  snake: {
-    position: 'absolute',
-    backgroundColor: 'transparent',
-  },
-  snakeHead: {
-    position: 'absolute',
-  },
-  innerRing: {
-    position: 'absolute',
-    borderWidth: 1,
-  },
-  checkBadge: {
+  badge: {
     position: 'absolute',
     backgroundColor: '#10B981',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#0F172A',
+    borderWidth: 2.5,
+    borderColor: '#fff',
     shadowColor: '#10B981',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 4,
   },
-  checkText: {
+  badgeText: {
     color: '#fff',
     fontWeight: '700',
   },

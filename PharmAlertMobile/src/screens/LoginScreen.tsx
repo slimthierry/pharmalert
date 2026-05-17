@@ -10,7 +10,7 @@ import Logo from '../components/Logo';
 import * as SecureStore from 'expo-secure-store';
 
 const KEY_BASE_URL = 'pharmalert_base_url';
-const DEFAULT_URL = 'https://7f08a391ede8def9-102-64-167-178.serveousercontent.com/api/v1';
+const DEFAULT_URL = 'https://a307ba9a5153df46-102-64-167-178.serveousercontent.com/api/v1';
 
 const { height } = Dimensions.get('window');
 
