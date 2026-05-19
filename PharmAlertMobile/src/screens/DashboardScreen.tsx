@@ -181,7 +181,7 @@ export default function DashboardScreen() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1, padding: 16 }}
+        contentContainerStyle={{ flex: 1, padding: 16 }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         showsVerticalScrollIndicator={false}
       >

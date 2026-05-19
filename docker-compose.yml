@@ -47,7 +47,7 @@ services:
       SECRET_KEY: pharmalert-secret-key-change-in-production
       CORS_ORIGINS: '["http://localhost:3900"]'
       SIH_URL: http://10.10.1.24:9000
-      SIH_DB: likmed_db
+      SIH_DB: prod-db-likmed
       SIH_USERNAME: admin@hdl.tg
       SIH_PASSWORD: ProDPro2029@
     extra_hosts:
