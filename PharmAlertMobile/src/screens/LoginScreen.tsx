@@ -10,7 +10,7 @@ import Logo from '../components/Logo';
 import * as SecureStore from 'expo-secure-store';
 
 const KEY_BASE_URL = 'pharmalert_base_url';
-const DEFAULT_URL = 'https://a307ba9a5153df46-102-64-167-178.serveousercontent.com/api/v1';
+const DEFAULT_URL = 'https://neural-phrases-laughing-bible.trycloudflare.com/api/v1';
 
 const { height } = Dimensions.get('window');
 

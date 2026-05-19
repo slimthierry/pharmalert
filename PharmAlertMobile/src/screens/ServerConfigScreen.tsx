@@ -66,7 +66,7 @@ export default function ServerConfigScreen({ navigation }: { navigation: { goBac
         />
 
         <Text style={styles.hint}>
-          iPhone (externe): https://a307ba9a5153df46-102-64-167-178.serveousercontent.com/api/v1{'\n'}
+          iPhone (externe): https://neural-phrases-laughing-bible.trycloudflare.com/api/v1{'\n'}
           Émulateur Android: http://10.0.2.2:9600/api/v1{'\n'}
           Web: http://localhost:9600/api/v1
         </Text>

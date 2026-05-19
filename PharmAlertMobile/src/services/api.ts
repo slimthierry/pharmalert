@@ -17,7 +17,7 @@ import type {
 
 // L'URL est configurable — par défaut backend Docker
 // Utilise SecureStore pour conserver le choix de l'utilisateur
-const DEFAULT_BASE_URL = 'https://a307ba9a5153df46-102-64-167-178.serveousercontent.com/api/v1';
+const DEFAULT_BASE_URL = 'https://neural-phrases-laughing-bible.trycloudflare.com/api/v1';
 
 const KEY_BASE_URL = 'pharmalert_base_url';
 const KEY_TOKEN = 'pharmalert_token';
